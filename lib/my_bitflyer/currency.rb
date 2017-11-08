@@ -32,8 +32,35 @@ module MyBitflyer
       board['mid_price']
     end
 
-    def last_bought_prqwice
-      last_buy_order['price']
+    def price_for_selling
+      price * (1 - commission_rate)
+    end
+
+    def price_for_buying
+      price * (1 + commission_rate)
+    end
+
+    def sellable_size
+      balance
+    end
+
+    def buyable_size
+      jpy_balance / price_for_buying
+    end
+
+    def latest_sold_price
+      return 0 if last_sell_order.nil?
+      last_sell_order['price'].to_i * (1 - commission_rate)
+    end
+
+    def latest_bought_price
+      jpy_for_buy_orders / sum_coin_of_buy_orders
+    end
+
+    def latest_bought_max_price
+      buy_orders_after_last_sell.map do |b|
+        b['price']
+      end.max.to_i
     end
 
     def last_sell_order
@@ -45,8 +72,14 @@ module MyBitflyer
     end
 
     def jpy_for_buy_orders
-      jpy = buy_orders_after_last_sell.inject do |sum, order|
-        sum += order['price'] * order['size'] * (1 + commission_rate)
+      buy_orders_after_last_sell.inject(0) do |sum, order|
+        sum += order['price'] * order['size']
+      end
+    end
+
+    def sum_coin_of_buy_orders
+      buy_orders_after_last_sell.inject(0) do |sum, order|
+        sum += order['size'] * (1 + commission_rate)
       end
     end
 
@@ -68,7 +101,7 @@ module MyBitflyer
       @sell_orders ||= child_orders.select { |co| co['side'] == 'SELL' }
     end
 
-    def is_last_action_buying?
+    def last_action_buying?
       child_orders.first['side'] == 'BUY'
     end
 
@@ -96,6 +129,26 @@ module MyBitflyer
 
     def commission_rate
       @commission_rate ||= private_client.trading_commission['commission_rate']
+    end
+
+    def buy(data)
+      private_client.send_child_order(
+        currency_code,
+        'LIMIT',
+        'BUY',
+        price,
+        size
+      )
+    end
+
+    def sell(data)
+      private_client.send_child_order(
+        currency_code,
+        'LIMIT',
+        'SELL',
+        price,
+        size
+      )
     end
 
     private
