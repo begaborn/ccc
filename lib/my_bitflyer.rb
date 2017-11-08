@@ -72,7 +72,7 @@ module MyBitflyer
     end
 
     def buying_price
-      (currency.price * down_rate(conf['more_price'].to_i)).to_i
+      (currency.price * down_rate(conf['more_price'].to_f)).to_i
     end
 
     def buyable_size
@@ -80,7 +80,7 @@ module MyBitflyer
     end
 
     def selling_price
-      (currency.price * up_rate(conf['more_price'].to_i)).to_i
+      (currency.price * up_rate(conf['more_price'].to_f)).to_i
     end
 
     def sellable_size
