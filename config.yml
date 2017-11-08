@@ -1,6 +1,6 @@
 BTC:
   init_action: 'BUY'
-  init_price: 870000
+  init_price: 840000
   #desire_price: 820000
   yield: 2
   # If you sell coin, it will be sold 1%('more_price') more expesive than 'mid-price'

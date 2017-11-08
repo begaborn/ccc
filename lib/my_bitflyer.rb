@@ -4,7 +4,7 @@ require 'my_bitflyer/currency'
 require 'my_bitflyer/currency/btc'
 require 'util'
 
-# Action for Bitflyer
+# Module for Bitflyer
 module MyBitflyer
   def btc
     MyBitflyer::Btc.new
@@ -14,6 +14,10 @@ module MyBitflyer
   # Action Class decide action for Selling, Buying, etc
   class Action
     attr_accessor :currency, :conf
+    def self.btc
+      new(MyBitflyer.btc)
+    end
+
     def initialize(currency, conf = YAML.load_file('config.yml'))
       self.currency = currency
       self.conf = conf[currency.currency_code] || {}
@@ -38,7 +42,7 @@ module MyBitflyer
       data[:price] = buying_price
       data[:fee] = fee(data[:size])
       data[:jpy] = data[:price] * (data[:size] + data[:fee])
-#      currency.buy data
+      currency.buy data
       TransactionLog.save data
     end
 
@@ -49,7 +53,7 @@ module MyBitflyer
       data[:price] = selling_price
       data[:fee] = fee(data[:size])
       data[:jpy] = data[:price] * data[:size]
-#     currency.sell data
+      currency.sell data
       TransactionLog.save data
     end
 

@@ -1,14 +1,11 @@
-$:.unshift(File.dirname(File.expand_path(__FILE__)) + "/lib")
+$:.unshift(File.dirname(File.expand_path(__FILE__)) + '/lib')
 require 'my_bitflyer'
 require 'pry-byebug'
 
 # Auto-Exchange Program for Cryptocurrency.
 
-# Bitcoin information.
-btc = MyBitflyer.btc
-
 # Action object for Bitcoin.
-action = MyBitflyer::Action.new(btc)
+action = MyBitflyer::Action.btc
 
 # If the last action is 'Sell', the program will try to buy coin.
 # But when the 'sell' conditions are not satisfied, no action.
@@ -24,5 +21,5 @@ elsif action.buy?
 
 # Because the conditions are not satisfied, no action.
 else
-  p "No Action"
+  p 'No Action'
 end
