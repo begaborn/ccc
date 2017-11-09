@@ -133,21 +133,21 @@ module MyBitflyer
 
     def buy(data)
       private_client.send_child_order(
-        currency_code,
+        product_code,
         'LIMIT',
         'BUY',
-        price,
-        size
+        data[:price],
+        data[:size]
       )
     end
 
     def sell(data)
       private_client.send_child_order(
-        currency_code,
+        product_code,
         'LIMIT',
         'SELL',
-        price,
-        size
+        data[:price],
+        data[:size]
       )
     end
 
