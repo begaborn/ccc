@@ -6,7 +6,7 @@ BTC:
   # desire_price: 820000
 
   # Desire earning yield.
-  # When you want to sell the coin, the condition of sale will be 'price = bought-price + (mid-price - yield)'.
+  # When you want to sell the coin, the condition of sale will be 'price = bought-price + (mid-price + yield)'.
   # 'bought-price' is price(btc/jpy) in which the coin was bought.
   # For example, you bought a coin of 850000yen. The program don't try to sell coin unless the coin price is increased by 1% compared to 850000yen.
   yield: 1
