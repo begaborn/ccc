@@ -86,11 +86,17 @@ module MyBitflyer
     end
 
     def buy_orders
-      @buy_orders ||= child_orders.select { |co| co['side'] == 'BUY' }
+      @buy_orders ||= child_orders.select do |co|
+        co['side'] == 'BUY' &&
+          co['child_order_state'] == 'COMPLETED'
+      end
     end
 
     def sell_orders
-      @sell_orders ||= child_orders.select { |co| co['side'] == 'SELL' }
+      @sell_orders ||= child_orders.select do |co|
+        co['side'] == 'SELL' &&
+          co['child_order_state'] == 'COMPLETED'
+      end
     end
 
     def last_action_buying?
@@ -129,7 +135,8 @@ module MyBitflyer
         child_order_type: 'LIMIT',
         side: 'BUY',
         price: price,
-        size: size
+        size: size,
+        minute_to_expire: 5
       )
     end
 
@@ -139,8 +146,13 @@ module MyBitflyer
         child_order_type: 'LIMIT',
         side: 'SELL',
         price: price,
-        size: size
+        size: size,
+        minute_to_expire: 5
       )
+    end
+
+    def in_active?
+      child_orders.first['child_order_state'] == 'ACTIVE'
     end
 
     private

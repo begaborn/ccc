@@ -58,11 +58,11 @@ module MyBitflyer
     end
 
     def sell?
-      next_action_selling? && rise?
+      next_action_selling? && rise? && !currency.in_active?
     end
 
     def buy?
-      next_action_buying? && decline?
+      next_action_buying? && decline? && !currency.in_active?
     end
 
     private
