@@ -62,7 +62,7 @@ module MyBitflyer
     end
 
     def buy?
-      next_action_buying? && decline? && !currency.in_active?
+      (buyable_size > 0 || next_action_buying?) && decline? && !currency.in_active?
     end
 
     private
