@@ -42,7 +42,7 @@ module MyBitflyer
       data[:price] = buying_price
       data[:fee] = fee(data[:size])
       data[:jpy] = data[:price] * (data[:size] + data[:fee])
-      currency.buy data
+      currency.buy(data[:size], data[:price])
       TransactionLog.save data
     end
 
@@ -53,7 +53,7 @@ module MyBitflyer
       data[:price] = selling_price
       data[:fee] = fee(data[:size])
       data[:jpy] = data[:price] * data[:size]
-      currency.sell data
+      currency.sell(data[:size], data[:price])
       TransactionLog.save data
     end
 
