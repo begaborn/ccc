@@ -1,13 +1,16 @@
 require 'my_bitflyer'
 
 module MyBitflyer
+  # Currency Object.
   class Currency
     def public_client
       @public_client ||= Bitflyer.http_public_client
     end
 
     def private_client
-      @private_client ||= Bitflyer.http_private_client(conf[:api][:key], conf[:api][:secret])
+      @private_client ||= Bitflyer.http_private_client(
+        conf[:api][:key], conf[:api][:secret]
+      )
     end
 
     def product_code
@@ -21,11 +24,15 @@ module MyBitflyer
     end
 
     def balance
-      @balacne ||= balance_info.select { |b| b['currency_code'] == currency_code }.first['available']
+      @balacne ||= balance_info.select do |b|
+        b['currency_code'] == currency_code
+      end.first['available']
     end
 
     def jpy_balance
-      @jpy_balacne ||= balance_info.select { |b| b['currency_code'] == 'JPY' }.first['available']
+      @jpy_balacne ||= balance_info.select do |b|
+        b['currency_code'] == 'JPY'
+      end.first['available']
     end
 
     def price
@@ -53,10 +60,6 @@ module MyBitflyer
       last_sell_order['price'].to_i * (1 - commission_rate)
     end
 
-    def latest_bought_price
-      jpy_for_buy_orders / sum_coin_of_buy_orders
-    end
-
     def latest_bought_max_price
       buy_orders_after_last_sell.map do |b|
         b['price']
@@ -71,25 +74,14 @@ module MyBitflyer
       buy_orders.first
     end
 
-    def jpy_for_buy_orders
-      buy_orders_after_last_sell.inject(0) do |sum, order|
-        sum += order['price'] * order['size']
-      end
-    end
-
-    def sum_coin_of_buy_orders
-      buy_orders_after_last_sell.inject(0) do |sum, order|
-        sum += order['size'] * (1 + commission_rate)
-      end
-    end
-
     def jpy_for_my_coin
       price * balance * (1 - commission_rate)
     end
 
     def buy_orders_after_last_sell
       @buy_orders_after_last_sell ||= buy_orders.select do |buy_order|
-        last_sell_order.nil? || (buy_order['child_order_date'] > last_sell_order['child_order_date'])
+        last_sell_order.nil? ||
+          (buy_order['child_order_date'] > last_sell_order['child_order_date'])
       end
     end
 
@@ -115,7 +107,7 @@ module MyBitflyer
 
     def available_asks
       board['asks'].select do |a|
-        price_jpy = a['size'] < (balance * (1 - trading_commission))
+        a['size'] < (balance * (1 - trading_commission))
       end
     end
 
@@ -131,23 +123,23 @@ module MyBitflyer
       @commission_rate ||= private_client.trading_commission['commission_rate']
     end
 
-    def buy(data)
+    def buy(size, price)
       private_client.send_child_order(
-        product_code,
-        'LIMIT',
-        'BUY',
-        data[:price],
-        data[:size]
+        product_code: product_code,
+        child_order_type: 'LIMIT',
+        side: 'BUY',
+        price: price,
+        size: size
       )
     end
 
-    def sell(data)
+    def sell(size, price)
       private_client.send_child_order(
-        product_code,
-        'LIMIT',
-        'SELL',
-        data[:price],
-        data[:size]
+        product_code: product_code,
+        child_order_type: 'LIMIT',
+        side: 'SELL',
+        price: price,
+        size: size
       )
     end
 
@@ -167,7 +159,8 @@ module MyBitflyer
         if reload
           public_client.board(product_code)
         else
-          @board || public_client.board(product_code)
+          @board ||
+            public_client.board(product_code)
         end
     end
 
@@ -176,12 +169,17 @@ module MyBitflyer
         if reload
           private_client.child_orders(product_code: product_code)
         else
-          @child_orders || private_client.child_orders(product_code: product_code)
+          @child_orders ||
+            private_client.child_orders(product_code: product_code)
         end
     end
 
     def conf
-      @conf ||= {api: {key: ENV['BITFLYER_API_KEY'], secret: ENV['BITFLYER_API_SECRET']}}
+      @conf ||= {
+        api: {
+          key: ENV['BITFLYER_API_KEY'], secret: ENV['BITFLYER_API_SECRET']
+        }
+      }
     end
   end
 end
