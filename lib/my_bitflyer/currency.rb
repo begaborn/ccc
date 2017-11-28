@@ -22,7 +22,7 @@ module MyBitflyer
         cmd = "@#{name}_#{product_code.downcase}"
         realtime_client.instance_variable_set(cmd.to_sym, -> (json) {
           File.open(filename, 'a') do |file|
-            file.puts json 
+            file.puts json
           end
         })
       end
