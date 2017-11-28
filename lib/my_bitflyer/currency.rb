@@ -13,6 +13,21 @@ module MyBitflyer
       )
     end
 
+    def realtime_client
+      @realtime_client ||= Bitflyer.realtime_client
+    end
+
+    [:ticker, :board, :executions].each do |name|
+      define_method("r_#{name}") do |filename|
+        cmd = "@#{name}_#{product_code.downcase}"
+        realtime_client.instance_variable_set(cmd.to_sym, -> (json) {
+          File.open(filename, 'a') do |file|
+            file.puts json 
+          end
+        })
+      end
+    end
+
     def product_code
       "#{currency_code}_JPY"
     end
@@ -136,7 +151,7 @@ module MyBitflyer
         side: 'BUY',
         price: price,
         size: size,
-        minute_to_expire: 5
+        minute_to_expire: 5,
       )
     end
 
@@ -147,7 +162,7 @@ module MyBitflyer
         side: 'SELL',
         price: price,
         size: size,
-        minute_to_expire: 5
+        minute_to_expire: 5,
       )
     end
 
@@ -186,11 +201,21 @@ module MyBitflyer
         end
     end
 
+    def board(reload: false)
+      @board =
+        if reload
+          public_client.board(product_code)
+        else
+          @board ||
+            public_client.board(product_code)
+        end
+    end
+
     def conf
       @conf ||= {
         api: {
-          key: ENV['BITFLYER_API_KEY'], secret: ENV['BITFLYER_API_SECRET']
-        }
+          key: ENV['BITFLYER_API_KEY'], secret: ENV['BITFLYER_API_SECRET'],
+        },
       }
     end
   end
