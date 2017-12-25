@@ -3,5 +3,5 @@ require 'my_bitflyer'
 require 'pry-byebug'
 
 # Action object for Bitcoin.
-btc = MyBitflyer.btc
+btc = Bitflyer.btc
 puts btc.price

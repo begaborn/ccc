@@ -1,30 +1,21 @@
 require 'bitflyer'
 require 'transaction_log'
-require 'my_bitflyer/currency'
-require 'my_bitflyer/currency/btc'
+require 'market'
 require 'util'
 
 # Module for Bitflyer
-module MyBitflyer
-  def btc
-    MyBitflyer::Btc.new
-  end
-  module_function :btc
+module Bitflyer
+  CURRENCIES = [:btc]
 
   # Action Class decide action for Selling, Buying, etc
-  class Action
-    attr_accessor :currency, :conf
-    def self.btc
-      new(MyBitflyer.btc)
-    end
-
-    def initialize(currency, conf = YAML.load_file('config.yml'))
-      self.currency = currency
-      self.conf = conf[currency.currency_code] || {}
-    end
-
-    def transaction
-      @transaction ||= TransactionLog.all
+  class Action < Market::Action
+    class << self
+      CURRENCIES.each do |currency|
+        require "my_bitflyer/currency/#{currency}"
+        define_method(currency) do
+          new(Bitflyer.send(currency))
+        end
+      end
     end
 
     def rise?
@@ -37,6 +28,8 @@ module MyBitflyer
 
     def buy
       data = {}
+      data[:market] = 'Bitflyer'
+      data[:date] = Time.now
       data[:side] = 'BUY'
       data[:size] = buyable_size
       data[:price] = buying_price
@@ -48,6 +41,8 @@ module MyBitflyer
 
     def sell
       data = {}
+      data[:market] = 'Bitflyer'
+      data[:date] = Time.now
       data[:side] = 'SELL'
       data[:size] = sellable_size
       data[:price] = selling_price

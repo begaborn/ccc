@@ -1,8 +1,9 @@
 require 'my_bitflyer'
+require 'market'
 
-module MyBitflyer
+module Bitflyer
   # Currency Object.
-  class Currency
+  class Currency < Market::Currency
     def public_client
       @public_client ||= Bitflyer.http_public_client
     end
@@ -30,12 +31,6 @@ module MyBitflyer
 
     def product_code
       "#{currency_code}_JPY"
-    end
-
-    def reload
-      instance_variables.each do |var|
-        remove_instance_variable(var)
-      end
     end
 
     def balance
