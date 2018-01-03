@@ -1,6 +1,3 @@
-require 'my_bitflyer'
-require 'market'
-
 module Bitflyer
   # Currency Object.
   class Currency < Market::Currency
@@ -29,8 +26,16 @@ module Bitflyer
       end
     end
 
-    def product_code
+    def currency_code
+      super.upcase
+    end
+
+    def currency_pair
       "#{currency_code}_JPY"
+    end
+
+    def product_code
+      currency_pair
     end
 
     def balance

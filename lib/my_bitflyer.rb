@@ -1,11 +1,16 @@
 require 'bitflyer'
-require 'transaction_log'
-require 'market'
-require 'util'
+require 'my_bitflyer/currency'
 
 # Module for Bitflyer
 module Bitflyer
   CURRENCIES = [:btc]
+
+  CURRENCIES.each do |currency|
+    define_method(currency) do
+      "#{self.to_s}::#{currency.to_s.classify}".constantize.new
+    end
+    module_function currency
+  end
 
   # Action Class decide action for Selling, Buying, etc
   class Action < Market::Action
@@ -16,6 +21,10 @@ module Bitflyer
           new(Bitflyer.send(currency))
         end
       end
+    end
+
+    def currency_code
+      super.upcase
     end
 
     def rise?

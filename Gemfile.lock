@@ -1,4 +1,11 @@
 GIT
+  remote: git@github.com:17number/ruby_coincheck_client.git
+  revision: 813d80a0456040a4f082e334ceb2e3da4e7deb67
+  branch: master
+  specs:
+    ruby_coincheck_client (0.2.0)
+
+GIT
   remote: git@github.com:begaborn/bitflyer.git
   revision: 6c3f5d55c34cf9734b9b378ee24a7e10d1d0408e
   branch: master
@@ -10,10 +17,11 @@ GIT
 
 GIT
   remote: git@github.com:begaborn/korbit.git
-  revision: bbd0d07d4fecb8bd6c6d4e8a6be1cece5edcbf63
+  revision: ce97882f5a6c33bde43b3c1fcb808d967dc10cf7
   branch: master
   specs:
     korbit (0.0.4)
+      activesupport (~> 5.1.4)
 
 GIT
   remote: git@github.com:begaborn/zaif-ruby.git
@@ -26,6 +34,11 @@ GIT
 GEM
   remote: https://rubygems.org/
   specs:
+    activesupport (5.1.4)
+      concurrent-ruby (~> 1.0, >= 1.0.2)
+      i18n (~> 0.7)
+      minitest (~> 5.1)
+      tzinfo (~> 1.1)
     byebug (9.1.0)
     celluloid (0.17.3)
       celluloid-essentials
@@ -80,14 +93,17 @@ GEM
       faraday (>= 0.7.4, < 1.0)
     hitimes (1.2.6)
     httpclient (2.8.3)
+    i18n (0.9.1)
+      concurrent-ruby (~> 1.0)
     inflecto (0.0.2)
     json (2.1.0)
     method_source (0.9.0)
+    minitest (5.11.1)
     multipart-post (2.0.0)
-    pry (0.11.2)
+    pry (0.11.3)
       coderay (~> 1.1.0)
       method_source (~> 0.9.0)
-    pry-byebug (3.5.0)
+    pry-byebug (3.5.1)
       byebug (~> 9.1)
       pry (~> 0.10)
     pubnub (4.0.27)
@@ -95,8 +111,11 @@ GEM
       dry-validation (~> 0.10)
       httpclient (~> 2.8, >= 2.8.3)
       json (>= 1.8, < 3)
+    thread_safe (0.3.6)
     timers (4.1.2)
       hitimes
+    tzinfo (1.2.4)
+      thread_safe (~> 0.1)
     websocket (1.2.5)
     websocket-client-simple (0.3.0)
       event_emitter
@@ -106,9 +125,11 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  activesupport
   bitflyer!
   korbit!
   pry-byebug
+  ruby_coincheck_client!
   zaif!
 
 BUNDLED WITH
