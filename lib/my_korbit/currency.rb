@@ -1,13 +1,32 @@
 module Korbit
   # Currency Object.
   class Currency < Market::Currency
+    class << self
+      def client
+        @client ||= Korbit::Client.new(
+          client_id: conf[:api][:key],
+          client_secret: conf[:api][:secret],
+          username: conf[:api][:username],
+          password: conf[:api][:password],
+        )
+      end
+
+      private
+
+      def conf
+        @conf ||= {
+          api: {
+            key: ENV['KORBIT_API_KEY'],
+            secret: ENV['KORBIT_API_SECRET'],
+            username: ENV['KORBIT_USERNAME'],
+            password: ENV['KORBIT_PASSWORD'],
+          },
+        }
+      end
+    end
+
     def client
-      @client ||= Korbit::Client.new(
-        client_id: conf[:api][:key],
-        client_secret: conf[:api][:secret],
-        username: conf[:api][:username],
-        password: conf[:api][:password]
-      )
+      self.class.client
     end
 
     def currency_code
@@ -53,14 +72,7 @@ module Korbit
     end
 
     def conf
-      @conf ||= {
-        api: {
-          key: ENV['KORBIT_API_KEY'],
-          secret: ENV['KORBIT_API_SECRET'],
-          username: ENV['KORBIT_USERNAME'],
-          password: ENV['KORBIT_PASSWORD']
-        },
-      }
+      self.class.conf
     end
   end
 end
