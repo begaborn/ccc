@@ -17,8 +17,8 @@ module Ccc
   def markets_with_currencies(markets = [])
     @markets_with_currencies ||= markets.each_with_object(Hash.new({})) do |market, h|
       require "my_#{market}"
-      h[market] = "#{market.classify}::Currency".constantize.subclasses.map do |kls|
-        kls.new
+      h[market] = "#{market.classify}::CURRENCIES".constantize.map do |currency|
+        market.classify.constantize.send(currency)
       end
     end
   end
