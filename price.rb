@@ -24,7 +24,7 @@ count = params['count'].to_i
 flush = params['flush']
 csv = params['csv']
 
-`mkdir csv` unless File.exist?('csv')
+`mkdir -p csv/price` unless File.exist?('csv/price')
 puts 'DATE             |PRICE(JPY:Bitflyer,Zaif,Coincheck  KRW:Korbit)'
 puts '-----------------------------------------------------------------------------------------------------'
 1.step do |index|
