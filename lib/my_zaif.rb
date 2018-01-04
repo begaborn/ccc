@@ -3,7 +3,7 @@ require 'my_zaif/currency'
 
 # Module for Zaif
 module Zaif
-  CURRENCIES = [:btc, :mona, :xem, :bch, :eth]
+  CURRENCIES = [:btc, :bch, :eth, :mona, :xem]
 
   CURRENCIES.each do |currency|
     define_method(currency) do
