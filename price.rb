@@ -23,8 +23,8 @@ interval = params['interval'].to_i
 count = params['count'].to_i
 flush = params['flush']
 csv = params['csv']
-
-`mkdir -p csv/price` unless File.exist?('csv/price')
+csv_path = 'csv/price'
+`mkdir -p #{csv_path}` unless File.exist?(csv_path)
 puts 'DATE             |PRICE(JPY:Bitflyer,Zaif,Coincheck  KRW:Korbit)'
 puts '-----------------------------------------------------------------------------------------------------'
 1.step do |index|
@@ -33,7 +33,7 @@ puts '--------------------------------------------------------------------------
   show "#{date} "
 
   date_str = Time.now.strftime('%Y%m%d')
-  price_csv = File.open("csv/#{date_str}.csv", 'a') if csv
+  price_csv = File.open("#{csv_path}/#{date_str}.csv", 'a') if csv
   price_str = "#{date}, "
 
   Ccc.markets_with_currencies(target_markets).each do |market, currencies|
