@@ -1,11 +1,29 @@
 module Zaif
   # Currency Object.
   class Currency < Market::Currency
+    class << self
+      def client
+        @client ||= Zaif::API.new(
+          api_key: conf[:api][:key],
+          api_secret: conf[:api][:secret],
+        )
+      end
+
+      def conf
+        @conf ||= {
+          api: {
+            key: ENV['ZAIF_API_KEY'], secret: ENV['ZAIF_API_SECRET'],
+          },
+        }
+      end
+    end
+
     def client
-      @client ||= Zaif::API.new(
-        api_key: conf[:api][:key],
-        api_secret: conf[:api][:secret]
-      )
+      self.class.client
+    end
+
+    def conf
+      self.class.conf
     end
 
     def currency_code
@@ -35,14 +53,6 @@ module Zaif
     def ticker
       client.get_ticker(currency_code)
     end
-    private
 
-    def conf
-      @conf ||= {
-        api: {
-          key: ENV['ZAIF_API_KEY'], secret: ENV['ZAIF_API_SECRET'],
-        },
-      }
-    end
   end
 end

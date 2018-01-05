@@ -17,7 +17,7 @@ GIT
 
 GIT
   remote: git@github.com:begaborn/korbit.git
-  revision: ce97882f5a6c33bde43b3c1fcb808d967dc10cf7
+  revision: e4930ebcd061ceb65c89db7c1e3c3e29633e1448
   branch: master
   specs:
     korbit (0.0.4)

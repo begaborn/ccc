@@ -11,8 +11,6 @@ module Korbit
         )
       end
 
-      private
-
       def conf
         @conf ||= {
           api: {
@@ -27,6 +25,10 @@ module Korbit
 
     def client
       self.class.client
+    end
+
+    def conf
+      self.class.conf
     end
 
     def currency_code
@@ -69,10 +71,6 @@ module Korbit
 
     def constants
       @constants ||= client.constants
-    end
-
-    def conf
-      self.class.conf
     end
   end
 end
