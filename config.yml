@@ -18,4 +18,18 @@ bitflyer:
 zaif:
   btc:
     init_action: 'BUY'
+    fee:
+      withdrawal: 0.001
+      maker: -0.0005
+      taker: -0.0001
+  bch:
+    fee:
+      withdrawal: 0.001
+      maker: 0.0
+      taker: 0.003
+  eth:
+    fee:
+      withdrawal: 0.01
+      maker: 0.0
+      taker: 0.001
 

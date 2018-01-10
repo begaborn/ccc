@@ -35,12 +35,20 @@ module Korbit
       super.downcase
     end
 
+    def pair
+      'krw'
+    end
+
     def currency_pair
-      "#{currency_code}_krw"
+      "#{currency_code}_#{pair}"
     end
 
     def balance
-      @balacne
+      @balacne ||= client.balance
+    end
+
+    def krw
+      balance * price
     end
 
     def krw_balance
@@ -48,29 +56,69 @@ module Korbit
     end
 
     def price
-      @price ||= ticker['last']
+      @price ||= (ticker['last'].to_i || -1)
     end
 
     def trades
-      transactions
+      @trades ||= client.transactions.map do |trade|
+        trade['date'] = (trade.delete('timestamp') / 1000).to_i
+        trade
+      end
+    end
+
+    def maker_fee
+      user_volume[currency_pair]['maker_fee']
+    end
+
+    def taker_fee
+      user_volume[currency_pair]['taker_fee']
+    end
+
+    def withdrawal_fee
+      constants['btcWithdrawalFee']
     end
 
     private
 
-    def transactions(currency_pair)
-      @transactions ||= client.transactions(currency_pair)
+    def user_volume
+      begin
+        @user_volume ||= client.uesr_volume(currency_pair)
+      rescue => e
+        {}
+      end
+
+    end
+
+    def transactions
+      begin
+        @transactions ||= client.transactions(currency_pair)
+      rescue => e
+        {}
+      end
     end
 
     def detailed_ticker
-      @detailed_ticker ||= client.detailed(currency_pair)
+      begin
+        @detailed_ticker ||= client.detailed(currency_pair)
+      rescue => e
+        {}
+      end
     end
 
     def ticker
-      @ticker ||= client.ticker(currency_pair)
+      begin
+        @ticker ||= client.ticker(currency_pair)
+      rescue => e
+        {}
+      end
     end
 
     def constants
-      @constants ||= client.constants
+      begin
+        @constants ||= client.constants
+      rescue => e
+        {}
+      end
     end
   end
 end

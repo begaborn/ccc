@@ -5,6 +5,11 @@ module Ccc
 
   MARKETS = ['bitflyer', 'zaif', 'korbit']
 
+  def currency(market, currency_code)
+    require "my_#{market}"
+    market.classify.constantize.send(currency_code.to_sym)
+  end
+
   def markets(markets = MARKETS)
     @markets ||= markets.each_with_object(Hash.new({})) do |market, h1|
       require "my_#{market}"
@@ -14,7 +19,7 @@ module Ccc
     end
   end
 
-  def markets_with_currencies(markets = [])
+  def currencies(markets = [])
     @markets_with_currencies ||= markets.each_with_object(Hash.new({})) do |market, h|
       require "my_#{market}"
       h[market] = "#{market.classify}::CURRENCIES".constantize.map do |currency|
@@ -22,6 +27,6 @@ module Ccc
       end
     end
   end
-  module_function :markets, :markets_with_currencies
+  module_function :currency, :markets, :currencies
 end
 

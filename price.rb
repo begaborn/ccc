@@ -36,7 +36,7 @@ puts '--------------------------------------------------------------------------
   price_csv = File.open("#{csv_path}/#{date_str}.csv", 'a') if csv
   price_str = "#{date}, "
 
-  Ccc.markets_with_currencies(target_markets).each do |market, currencies|
+  Ccc.currencies(target_markets).each do |market, currencies|
     show "|#{market.upcase}|"
     currencies.each do |currency|
       currency_code = "#{currency.currency_code.underscore}"

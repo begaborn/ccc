@@ -15,6 +15,7 @@ module Market
     def namespace
       self.class.name.split('::')[0].downcase
     end
+    alias_method :market_name, :namespace
   end
 
   class Currency
@@ -24,6 +25,11 @@ module Market
       end
       self
     end
+
+    def namespace
+      self.class.name.split('::')[0].downcase
+    end
+    alias_method :market_name, :namespace
 
     def currency_code
       self.class.to_s.split('::')[1]
