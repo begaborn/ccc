@@ -3,22 +3,28 @@ require 'my_zaif/currency'
 
 # Module for Zaif
 module Zaif
-  CURRENCIES = [:btc, :bch, :eth, :mona, :xem]
-
-  CURRENCIES.each do |currency|
-    define_method(currency) do
-      "#{self.to_s}::#{currency.to_s.classify}".constantize.new
+  def currencies
+    Currency.subclasses.map do |currency|
+      currency_sym = currency.code.to_sym
     end
-    module_function currency
+  end
+  module_function :currencies
+
+  Currency.subclasses.each do |currency|
+    currency_sym = currency.code.to_sym
+    define_method(currency_sym) do
+      currency.new
+    end
+    module_function currency_sym
   end
 
   # Action Class decide action for Selling, Buying, etc
   class Action < Market::Action
     class << self
-      CURRENCIES.each do |currency|
-        require "my_zaif/currency/#{currency}"
-        define_method(currency) do
-          new(Zaif.send(currency))
+      Currency.subclasses.each do |currency|
+        currency_sym = currency.to_s.split('::')[1].downcase.to_sym
+        define_method(currency_sym) do
+          new(Zaif.send(currency_sym))
         end
       end
     end

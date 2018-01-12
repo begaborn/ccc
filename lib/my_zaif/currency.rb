@@ -14,28 +14,12 @@ module Zaif
           api: {
             key: ENV['ZAIF_API_KEY'], secret: ENV['ZAIF_API_SECRET'],
           },
-        }.merge(YAML.load_file('config.yml')['zaif'])
+        }
       end
-    end
-
-    def client
-      self.class.client
-    end
-
-    def conf
-      self.class.conf
     end
 
     def currency_code
       super.downcase
-    end
-
-    def pair
-      "jpy"
-    end
-
-    def currency_pair
-      "#{currency_code}_#{pair}"
     end
 
     def realtime_board(output_filename = nil)
@@ -43,20 +27,34 @@ module Zaif
     end
 
     def balance
-      info_without_transactions['deposit'][currency_code.upcase]
+      balance = info_without_transactions['deposit'][currency_code.upcase] || 0
+      if balance.nil?
+        puts "Warning: Currency Code #{currency_code} is Not Supported for #{market_name}"
+      end
+      balance || 0.0
     end
 
     def available_balance
-      info_without_transactions['funds'][currency_code.upcase]
+      balance = info_without_transactions['funds'][currency_code.upcase] || 0
+      if balance.nil?
+        puts "Warning: Currency Code #{currency_code} is Not Supported for #{market_name}"
+      end
+      balance || 0.0
     end
 
     def jpy
       balance * price
     end
 
-    %w(withdrawal maker taker).each do |e|
-      define_method("#{e}_fee") do
-        self.class.conf[currency_code]['fee'][e]
+    %w(withdrawal maker taker).each do |type|
+      define_method("#{type}_fee") do
+        fee = 0
+        begin
+          fee = conf[currency_code]['fee'][type]
+        rescue => e
+          puts "Warning: Not Configured #{type} Fee for #{currency_code}"
+        end
+        fee
       end
     end
 
@@ -119,7 +117,7 @@ module Zaif
       ticker['vwap']
     end
 
-    def last_price
+    def price
       @price ||= ticker['last']
     end
 
@@ -135,12 +133,16 @@ module Zaif
       @info_without_tr ||= client.get_info_without_transactions
     end
 
-    def price
+    def last_price
       begin
-        @price ||= client.get_last_price(currency_code)
+        @last_price ||= client.get_last_price(currency_code)
       rescue => e
         -1
       end
+    end
+
+    def order_books
+      @trades ||= client.get_trades(currency_code)
     end
 
     def trades
@@ -168,3 +170,4 @@ module Zaif
     end
   end
 end
+Dir[File.join(File.expand_path(File.dirname(__FILE__)), 'currency/*.rb')].each { |f| require f }

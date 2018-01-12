@@ -29,10 +29,11 @@ puts 'DATE             |PRICE(JPY:Bitflyer,Zaif,Coincheck  KRW:Korbit)'
 puts '-----------------------------------------------------------------------------------------------------'
 1.step do |index|
   exit if count != 0 && index > count
-  date = Time.now.strftime('%Y-%m-%d %H:%M')
+  now = Time.now
+  date = now.strftime('%Y-%m-%d %H:%M')
   show "#{date} "
 
-  date_str = Time.now.strftime('%Y%m%d')
+  date_str = now.strftime('%Y%m%d')
   price_csv = File.open("#{csv_path}/#{date_str}.csv", 'a') if csv
   price_str = "#{date}, "
 

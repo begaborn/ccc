@@ -122,3 +122,4 @@ module Korbit
     end
   end
 end
+Dir[File.join(File.expand_path(File.dirname(__FILE__)), 'currency/*.rb')].each { |f| require f }

@@ -1,18 +1,44 @@
 module Bitflyer
   # Currency Object.
   class Currency < Market::Currency
+    class << self
+      def public_client
+        @public_client ||= Bitflyer.http_public_client
+      end
+
+      def private_client
+        @private_client ||= Bitflyer.http_private_client(
+          conf[:api][:key], conf[:api][:secret]
+        )
+      end
+
+      def realtime_client
+        @realtime_client ||= Bitflyer.realtime_client
+      end
+
+      def conf
+        @conf ||= {
+          api: {
+            key: ENV['BITFLYER_API_KEY'], secret: ENV['BITFLYER_API_SECRET'],
+          },
+        }
+      end
+    end
+
+    def client
+      private_client
+    end
+
     def public_client
-      @public_client ||= Bitflyer.http_public_client
+      self.class.public_client
     end
 
     def private_client
-      @private_client ||= Bitflyer.http_private_client(
-        conf[:api][:key], conf[:api][:secret]
-      )
+      self.class.private_client
     end
 
     def realtime_client
-      @realtime_client ||= Bitflyer.realtime_client
+      self.class.realtime_client
     end
 
     [:ticker, :board, :executions].each do |name|
@@ -31,7 +57,7 @@ module Bitflyer
     end
 
     def currency_pair
-      "#{currency_code}_JPY"
+      super.upcase
     end
 
     def product_code
@@ -210,13 +236,6 @@ module Bitflyer
             public_client.board(product_code)
         end
     end
-
-    def conf
-      @conf ||= {
-        api: {
-          key: ENV['BITFLYER_API_KEY'], secret: ENV['BITFLYER_API_SECRET'],
-        },
-      }
-    end
   end
 end
+Dir[File.join(File.expand_path(File.dirname(__FILE__)), 'currency/*.rb')].each { |f| require f }
