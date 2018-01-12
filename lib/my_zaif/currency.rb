@@ -23,7 +23,7 @@ module Zaif
     end
 
     def realtime_board(output_filename = nil)
-      client.stream(currency_code, "jpy", output_filename)
+      client.stream(currency_code, "jpy", output_filename.to_s)
     end
 
     def balance

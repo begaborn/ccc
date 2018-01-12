@@ -1,41 +1,8 @@
 require 'util'
 require 'transaction_log'
 module Market
-  DEFAULT_CONF_FILE = 'config/ccc.yml'.freeze
 
   class NotConfigured < StandardError; end
-
-  class Action
-    attr_accessor :currency, :conf
-
-    class << self
-      def namespace
-        self.name.split('::')[0].downcase
-      end
-      alias_method :market_name, :namespace
-    end
-
-    def initialize(currency, conf = load_default_yml)
-      self.currency = currency
-      self.conf = (conf[self.namespace] && conf[self.namespace][currency.currency_code.downcase]) || {}
-    end
-
-    def transaction
-      @transaction ||= TransactionLog.all
-    end
-
-    def namespace
-      self.class.namespace
-    end
-    alias_method :market_name, :namespace
-
-    private
-
-    def load_default_yml
-      return {} unless File.exist?(DEFAULT_CONF_FILE)
-      YAML.load_file(DEFAULT_CONF_FILE)
-    end
-  end
 
   class Currency
     attr_accessor :pair
@@ -104,8 +71,8 @@ module Market
     private
 
     def load_default_yml
-      return {} unless File.exist?(DEFAULT_CONF_FILE)
-      YAML.load_file(DEFAULT_CONF_FILE)
+      return {} unless File.exist?(Ccc.configuration.yml_filename.to_s)
+      YAML.load_file(Ccc.configuration.yml_filename.to_s)
     end
   end
 end

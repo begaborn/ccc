@@ -1,32 +1,35 @@
+require "ccc/version"
+require "ccc/configuration"
+require 'active_support/dependencies/autoload'
+require 'active_support/core_ext'
+require 'market'
 module Ccc
-  require 'active_support/dependencies/autoload'
-  require 'active_support/core_ext'
-  require 'market'
+  def configure
+    yield configuration
+  end
 
-  MARKETS = ['bitflyer', 'zaif', 'korbit']
+  def configuration
+    @configuration ||= Ccc::Configuration.new
+  end
+  module_function :configure, :configuration
+
+  MARKETS = ['bitflyer', 'zaif', 'korbit', 'coincheck']
 
   def currency(market, currency_code)
     require "my_#{market}"
-    market.classify.constantize.send(currency_code.to_sym)
+    market.classify.constantize.send(currency_code.downcase.to_sym)
   end
 
   def markets(markets = MARKETS)
     @markets ||= markets.each_with_object(Hash.new({})) do |market, h1|
       require "my_#{market}"
       h1[market] = "#{market.classify}::Currency".constantize.subclasses.each_with_object(Hash.new({})) do |currency, h2|
-        h2[currency.to_s.split('::')[1].downcase] = "#{market.classify}::Action".constantize.new(currency.new)
+        binding.pry
+        h2[currency.code.downcase.to_sym] = "#{market.classify}".constantize.send(currency.code.downcase.to_sym)
       end
     end
   end
 
-  def currencies(markets = [])
-    @markets_with_currencies ||= markets.each_with_object(Hash.new({})) do |market, h|
-      require "my_#{market}"
-      h[market] = "#{market.classify}::CURRENCIES".constantize.map do |currency|
-        market.classify.constantize.send(currency)
-      end
-    end
-  end
-  module_function :currency, :markets, :currencies
+  module_function :currency, :markets
 end
 

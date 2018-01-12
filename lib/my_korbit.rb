@@ -3,24 +3,18 @@ require 'my_korbit/currency'
 
 # Module for Korbit
 module Korbit
-  CURRENCIES = [:btc, :bch, :eth, :btg, :xrp]
-
-  CURRENCIES.each do |currency|
-    define_method(currency) do
-      "#{self.to_s}::#{currency.to_s.classify}".constantize.new
+  def currencies
+    Currency.subclasses.map do |currency|
+      currency_sym = currency.code.downcase.to_sym
     end
-    module_function currency
   end
+  module_function :currencies
 
-  # Action Class decide action for Selling, Buying, etc
-  class Action < Market::Action
-    class << self
-      CURRENCIES.each do |currency|
-        require "my_korbit/currency/#{currency}"
-        define_method(currency) do
-          new(Korbit.send(currency))
-        end
-      end
+  Currency.subclasses.each do |currency|
+    currency_sym = currency.code.downcase.to_sym
+    define_method(currency_sym) do
+      currency.new
     end
+    module_function currency_sym
   end
 end

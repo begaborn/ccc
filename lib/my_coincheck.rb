@@ -17,16 +17,4 @@ module Coincheck
     end
     module_function currency_sym
   end
-
-  # Action Class decide action for Selling, Buying, etc
-  class Action < Market::Action
-    class << self
-      Currency.subclasses.each do |currency|
-        currency_sym = currency.code.downcase.to_sym
-        define_method(currency_sym) do
-          new(Coincheck.send(currency_sym))
-        end
-      end
-    end
-  end
 end
