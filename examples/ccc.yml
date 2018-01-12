@@ -1,0 +1,35 @@
+bitflyer:
+  btc:
+    init_action: 'BUY'
+
+    init_price: 830000
+    desire_price: 870000
+
+    # Desire earning yield.
+    # When you want to sell the coin, the condition of sale will be 'price = bought-price + (mid-price + yield)'.
+    # 'bought-price' is price(btc/jpy) in which the coin was bought.
+    # For example, you bought a coin of 850000yen. The program don't try to sell coin unless the coin price is increased by 1% compared to 850000yen.
+    yield: 1
+
+    # If you sell coin, it will be sold 1%('more_price') more expesive than 'mid-price'
+    # If you buy coin, it will be bought 1%('more_price') cheaper  than 'mid-price'
+    more_price: 0
+
+zaif:
+  btc:
+    init_action: 'BUY'
+    fee:
+      withdrawal: 0.001
+      maker: -0.0005
+      taker: -0.0001
+  bch:
+    fee:
+      withdrawal: 0.001
+      maker: 0.0
+      taker: 0.003
+  eth:
+    fee:
+      withdrawal: 0.01
+      maker: 0.0
+      taker: 0.001
+
