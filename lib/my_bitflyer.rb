@@ -5,13 +5,13 @@ require 'my_bitflyer/currency'
 module Bitflyer
   def currencies
     Currency.subclasses.map do |currency|
-      currency_sym = currency.code.to_sym
+      currency_sym = currency.code.downcase.to_sym
     end
   end
   module_function :currencies
 
   Currency.subclasses.each do |currency|
-    currency_sym = currency.code.to_sym
+    currency_sym = currency.code.downcase.to_sym
     define_method(currency_sym) do
       currency.new
     end

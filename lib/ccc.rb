@@ -24,7 +24,6 @@ module Ccc
     @markets ||= markets.each_with_object(Hash.new({})) do |market, h1|
       require "my_#{market}"
       h1[market] = "#{market.classify}::Currency".constantize.subclasses.each_with_object(Hash.new({})) do |currency, h2|
-        binding.pry
         h2[currency.code.downcase.to_sym] = "#{market.classify}".constantize.send(currency.code.downcase.to_sym)
       end
     end
