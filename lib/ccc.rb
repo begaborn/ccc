@@ -3,6 +3,7 @@ require "ccc/configuration"
 require 'active_support/dependencies/autoload'
 require 'active_support/core_ext'
 require 'market'
+require 'my_zaif'
 module Ccc
   def configure
     yield configuration

@@ -1,7 +1,6 @@
 $:.unshift(File.dirname(File.expand_path(__FILE__)) + '/../lib')
 require 'pry-byebug'
 require 'ccc'
-autoload(:Zaif, 'my_zaif')
 
 Ccc.configure do |config|
   config.yml_filename = File.dirname(File.expand_path(__FILE__)) + '/ccc.yml'
@@ -16,7 +15,7 @@ Zaif.currencies.each do |c|
   puts "currency_code = #{currency.currency_code}"
   puts "price = #{currency.price}"
   puts "balance = #{currency.balance}"
-  puts "available balance = #{currency.available_balance}"
+  puts "funds = #{currency.funds}"
   puts "jpy = #{currency.jpy}"
   puts "withdrawal fee = #{currency.withdrawal_fee}"
   puts "maker fee = #{currency.maker_fee}"
@@ -25,6 +24,7 @@ Zaif.currencies.each do |c|
   puts "last_price = #{currency.last_price}"
   puts "trades = #{currency.trades}"
   puts "ticker = #{currency.ticker}"
+  puts "depth = #{currency.depth}"
   puts "depth = #{currency.depth}"
   puts ''
 end

@@ -34,7 +34,7 @@ module Zaif
       balance || 0.0
     end
 
-    def available_balance
+    def funds
       balance = info_without_transactions['funds'][currency_code.upcase] || 0
       if balance.nil?
         puts "Warning: Currency Code #{currency_code} is Not Supported for #{market_name}"

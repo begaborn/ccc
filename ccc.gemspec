@@ -25,10 +25,10 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rake", "~> 10.0"
   spec.add_development_dependency "pry-byebug"
 
-  spec.add_runtime_dependency 'bitflyer'
-  spec.add_runtime_dependency 'zaif'
-  spec.add_runtime_dependency 'korbit'
-  spec.add_runtime_dependency 'ruby_coincheck_client'
+  spec.add_runtime_dependency 'zaif', '0.0.2'
+  spec.add_runtime_dependency 'bitflyer', '0.1.2'
+  spec.add_runtime_dependency 'ruby_coincheck_client', '0.3.0'
+  spec.add_runtime_dependency 'websocket-client-simple'
   spec.add_runtime_dependency 'activesupport'
   spec.add_runtime_dependency 'color_echo'
 end

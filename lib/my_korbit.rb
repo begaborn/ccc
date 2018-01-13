@@ -1,4 +1,4 @@
-require 'korbit'
+require 'my_korbit/korbit'
 require 'my_korbit/currency'
 
 # Module for Korbit
