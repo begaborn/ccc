@@ -28,7 +28,7 @@ module Coincheck
     end
 
     def rate
-      JSON.parse(client.read_rate.body)
+      JSON.parse(client.read_rate(pair: currency_pair).body)
     end
 
     def order_books
