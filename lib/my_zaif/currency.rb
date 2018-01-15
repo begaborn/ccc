@@ -113,6 +113,10 @@ module Zaif
       end
     end
 
+    def volume
+      ticker['volume']
+    end
+
     def vwap
       ticker['vwap']
     end

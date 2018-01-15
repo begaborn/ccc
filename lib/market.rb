@@ -52,6 +52,14 @@ module Market
       self.class.conf.merge(market_conf)
     end
 
+    def volume
+      raise NotImplementedError.new("Not Supported: #{self.class}##{__method__}")
+    end
+
+    def vwap
+      raise NotImplementedError.new("Not Supported: #{self.class}##{__method__}")
+    end
+
     def price
       raise NotImplementedError.new("Not Supported: #{self.class}##{__method__}")
     end
