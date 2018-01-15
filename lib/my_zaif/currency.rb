@@ -27,7 +27,7 @@ module Zaif
     end
 
     def balance
-      balance = info_without_transactions['deposit'][currency_code.upcase] || 0
+      balance = info_without_transactions['deposit'][currency_code] || 0
       if balance.nil?
         puts "Warning: Currency Code #{currency_code} is Not Supported for #{market_name}"
       end
@@ -35,7 +35,7 @@ module Zaif
     end
 
     def funds
-      balance = info_without_transactions['funds'][currency_code.upcase] || 0
+      balance = info_without_transactions['funds'][currency_code] || 0
       if balance.nil?
         puts "Warning: Currency Code #{currency_code} is Not Supported for #{market_name}"
       end
@@ -50,7 +50,7 @@ module Zaif
       define_method("#{type}_fee") do
         fee = 0
         begin
-          fee = conf[currency_code]['fee'][type]
+          fee = conf[currency_code.downcase]['fee'][type]
         rescue => e
           puts "Warning: Not Configured #{type} Fee for #{currency_code}"
         end
@@ -139,19 +139,19 @@ module Zaif
 
     def last_price
       begin
-        @last_price ||= client.get_last_price(currency_code)
+        @last_price ||= client.get_last_price(currency_code.downcase)
       rescue => e
         -1
       end
     end
 
     def order_books
-      @trades ||= client.get_trades(currency_code)
+      @trades ||= client.get_trades(currency_code.downacase)
     end
 
     def trades
       begin
-        @trades ||= client.get_trades(currency_code)
+        @trades ||= client.get_trades(currency_code.downcase)
       rescue => e
         {}
       end
@@ -159,7 +159,7 @@ module Zaif
 
     def ticker
       begin
-        @ticker ||= client.get_ticker(currency_code)
+        @ticker ||= client.get_ticker(currency_code.downcase)
       rescue => e
         {}
       end
