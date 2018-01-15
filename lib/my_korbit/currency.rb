@@ -44,7 +44,7 @@ module Korbit
     end
 
     def balance
-      @balacne ||= client.balance
+      @balacne ||= client.balance.to_i
     end
 
     def krw
@@ -67,15 +67,15 @@ module Korbit
     end
 
     def maker_fee
-      user_volume[currency_pair]['maker_fee']
+      user_volume[currency_pair]['maker_fee'].to_f
     end
 
     def taker_fee
-      user_volume[currency_pair]['taker_fee']
+      user_volume[currency_pair]['taker_fee'].to_f
     end
 
     def withdrawal_fee
-      constants['btcWithdrawalFee']
+      constants['btcWithdrawalFee'].to_f
     end
 
     private

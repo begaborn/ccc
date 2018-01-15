@@ -114,15 +114,15 @@ module Zaif
     end
 
     def volume
-      ticker['volume']
+      ticker['volume'].to_i
     end
 
     def vwap
-      ticker['vwap']
+      ticker['vwap'].to_i
     end
 
     def price
-      @price ||= ticker['last']
+      @price ||= ticker['last'].to_i
     end
 
     def withdraw(address, amount, option = {})
