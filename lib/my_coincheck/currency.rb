@@ -24,11 +24,11 @@ module Coincheck
     end
 
     def price
-      @price ||= rate['rate'].to_f
+      rate['rate'].to_f
     end
 
     def rate
-      JSON.parse(client.read_rate(pair: currency_pair).body)
+      @rate ||= JSON.parse(client.read_rate(pair: currency_pair).body)
     end
 
     def order_books

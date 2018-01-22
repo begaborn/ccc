@@ -26,6 +26,7 @@ module Market
 
     def reload
       instance_variables.each do |var|
+        next if [:@pair, :@market_conf].include?(var)
         remove_instance_variable(var)
       end
       self
