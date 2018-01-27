@@ -31,4 +31,6 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'websocket-client-simple'
   spec.add_runtime_dependency 'activesupport'
   spec.add_runtime_dependency 'color_echo'
+
+  spec.add_runtime_dependency 'binance'
 end
