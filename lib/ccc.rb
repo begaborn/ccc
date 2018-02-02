@@ -7,6 +7,7 @@ require 'my_zaif'
 require 'my_coincheck'
 require 'my_bitflyer'
 require 'my_korbit'
+require 'my_bitbank'
 
 module Ccc
   def configure
