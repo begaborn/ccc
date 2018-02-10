@@ -59,6 +59,11 @@ module Korbit
       @price ||= (ticker['last'].to_i || -1)
     end
 
+    def volume
+      binding.pry
+      @volume ||= (detailed_ticker['volume'].to_i || -1)
+    end
+
     def trades
       @trades ||= client.transactions.map do |trade|
         trade['date'] = (trade.delete('timestamp') / 1000).to_i
@@ -97,7 +102,7 @@ module Korbit
 
     def detailed_ticker
       begin
-        @detailed_ticker ||= client.detailed(currency_pair)
+        @detailed_ticker ||= client.detailed_ticker(currency_pair)
       rescue => e
         {}
       end

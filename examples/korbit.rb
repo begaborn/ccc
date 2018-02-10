@@ -16,3 +16,4 @@ puts eth.withdrawal_fee
 puts eth.maker_fee
 puts eth.taker_fee
 puts eth.price
+puts eth.volume
