@@ -32,11 +32,11 @@ module Zaif
     end
 
     # Order book stream by Websocket
-    def stream(currency_code, counter_currency_code = "jpy", output_filename = nil)
-      f = if output_filename.nil?
+    def stream(currency_code, counter_currency_code = "jpy", output = nil)
+      f = if output.nil?
             STDOUT
           else
-            File.open(output_filename, 'a')
+            output
           end
       ws = WebSocket::Client::Simple.connect "wss://ws.zaif.jp:8888/stream?currency_pair=#{currency_code}_#{counter_currency_code}"
       ws.on :message do |msg|
@@ -44,7 +44,7 @@ module Zaif
       end
 
       ws.on :close do |e|
-        f.close unless output_filename.nil?
+        f.close unless output.nil?
       end
 
       loop do

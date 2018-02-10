@@ -22,8 +22,8 @@ module Zaif
       super.downcase
     end
 
-    def realtime_board(output_filename = nil)
-      client.stream(currency_code, "jpy", output_filename.to_s)
+    def stream(output = nil)
+      client.stream(currency_code, "jpy", output)
     end
 
     def balance
@@ -115,6 +115,10 @@ module Zaif
 
     def volume
       ticker['volume'].to_i
+    end
+
+    def latest_volume
+
     end
 
     def vwap

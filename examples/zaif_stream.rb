@@ -3,4 +3,9 @@ require 'pry-byebug'
 require 'ccc'
 autoload(:Zaif, 'my_zaif')
 btc = Zaif.btc
-btc.realtime_board('/tmp/realtime_test.log')
+btc.stream
+#btc.stream('stream.log')
+#File.foreach('stream.log') do |line|
+#  a = eval(line)
+#  a[:trades]
+#end

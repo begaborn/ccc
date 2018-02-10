@@ -9,4 +9,10 @@ end
 
 puts Korbit.currencies
 eth = Korbit.eth
+
+puts eth.krw
+puts eth.trades
+puts eth.withdrawal_fee
+puts eth.maker_fee
+puts eth.taker_fee
 puts eth.price

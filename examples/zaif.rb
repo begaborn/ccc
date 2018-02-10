@@ -8,6 +8,7 @@ end
 
 btc = Zaif.btc
 puts btc.price
+btc.stream
 
 Zaif.currencies.each do |c|
   currency = Zaif.send(c)
@@ -28,5 +29,3 @@ Zaif.currencies.each do |c|
   puts "depth = #{currency.depth}"
   puts ''
 end
-
-

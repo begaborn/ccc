@@ -44,7 +44,7 @@ module Korbit
     end
 
     def balance
-      @balacne ||= client.balance.to_i
+      @balacne ||= client.balance[currency_code]['available'].to_i
     end
 
     def krw
@@ -78,11 +78,9 @@ module Korbit
       constants['btcWithdrawalFee'].to_f
     end
 
-    private
-
     def user_volume
       begin
-        @user_volume ||= client.uesr_volume(currency_pair)
+        @user_volume ||= client.user_volume(currency_pair)
       rescue => e
         {}
       end
