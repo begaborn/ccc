@@ -92,7 +92,6 @@ module Korbit
     end
 
     def transactions
-      binding.pry
       begin
         @transactions ||= client.transactions(currency_pair)
       rescue => e
