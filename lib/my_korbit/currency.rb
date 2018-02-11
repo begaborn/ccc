@@ -65,10 +65,11 @@ module Korbit
 
     def trades
       @trades ||= transactions.map do |trade|
-        new_trade['date'] = (trade.delete('timestamp') / 1000).to_i
-        new_trade['amount'] = trade.delete('amount').to_i
-        new_trade['price'] = trade.delete('price').to_i
-        trade
+        trade.tap do |t|
+          t['date'] = (t.delete('timestamp') / 1000).to_i
+          t['amount'] = t['amount'].to_f
+          t['price'] = t['price'].to_i
+        end
       end
     end
 
