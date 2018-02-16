@@ -90,9 +90,20 @@ module Korbit
         id: tr_id
     end
 
-    def open_order(currency_pair: 'btc_krw', offset: 0, limit: 10)
-      post 'user/orders/open',
+    def orders_open(currency_pair: 'btc_krw', offset: 0, limit: 10)
+      get 'user/orders/open',
+        true,
         currency_pair: currency_pair,
+        offset: offset,
+        limit: limit
+    end
+
+    def orders(currency_pair: 'btc_krw', status: ['unfilled', 'filled', 'partially_filled'], id: nil, offset: 0, limit: 10)
+      get 'user/orders',
+        true,
+        currency_pair: currency_pair,
+        status: status,
+        id: id,
         offset: offset,
         limit: limit
     end

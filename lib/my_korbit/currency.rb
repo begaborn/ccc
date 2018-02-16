@@ -1,6 +1,10 @@
 module Korbit
   # Currency Object.
   class Currency < Market::Currency
+    def method_missing(action, *args)
+      self.class.__send__ action, *args
+    end
+
     class << self
       def client
         @client ||= Korbit::Client.new(
@@ -21,6 +25,14 @@ module Korbit
           },
         }
       end
+
+      def krw_balance
+        client.balance['krw']['available'].to_i
+      end
+
+      def krw_funds
+        client.balance['krw']['trade_in_use'].to_i
+      end
     end
 
     def client
@@ -29,6 +41,14 @@ module Korbit
 
     def conf
       self.class.conf
+    end
+
+    def krw_balance
+      @krw_balance ||= self.class.krw_balance
+    end
+
+    def krw_funds
+      @krw_funds ||= self.class.krw_funds
     end
 
     def currency_code
@@ -47,12 +67,12 @@ module Korbit
       @balacne ||= client.balance[currency_code]['available'].to_i
     end
 
-    def krw
-      balance * price
+    def funds
+      @funds ||= client.balance[currency_code]['trade_in_use'].to_i
     end
 
-    def krw_balance
-      @krw_balance
+    def krw
+      balance * price
     end
 
     def price
@@ -83,6 +103,72 @@ module Korbit
 
     def withdrawal_fee
       constants['btcWithdrawalFee'].to_f
+    end
+
+    def unfilled_order
+      @unfilled_order ||=
+        orders_open.map do |o|
+          {
+            id: o['id'],
+            date: (o['timestamp'] / 1000).to_i,
+            amount: o['total']['value'].to_i,
+            price: o['price']['value'].to_i,
+            type: o['type'],
+          }
+        end
+    end
+
+    def orderbook
+      begin
+        @orderbook ||= client.orderbook(currency_pair)
+      rescue => e
+        {}
+      end
+    end
+
+    def orders(id)
+      begin
+        params = {
+          currency_pair: currency_pair,
+          id: id,
+        }
+        @orders ||= client.orders params
+      rescue => e
+        puts e
+        {}
+      end
+    end
+
+    def orders_open(limit = 10)
+      params = {
+        currency_pair: currency_pair,
+        limit: limit,
+      }
+      begin
+        @orders_open ||= client.orders_open params
+      rescue => e
+        puts e
+        {}
+      end
+    end
+
+    def buy(price, amount)
+      params = {
+        currency_pair: currency_pair,
+        price: price,
+        coin_amount: amount
+      }
+
+      client.buy params
+    end
+
+    def sell(price, amount)
+      params = {
+        currency_pair: currency_pair,
+        price: price,
+        coin_amount: amount
+      }
+      client.sell params
     end
 
     def user_volume
