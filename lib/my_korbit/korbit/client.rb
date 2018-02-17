@@ -77,7 +77,7 @@ module Korbit
     end
 
     def sell(currency_pair: 'btc_krw', type: 'limit', price: 500, coin_amount: 1)
-      post 'user/orders/buy',
+      post 'user/orders/sell',
         currency_pair: currency_pair,
         type: type,
         price: price,

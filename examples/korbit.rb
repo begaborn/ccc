@@ -9,7 +9,6 @@ end
 
 #puts Korbit.currencies
 eth = Korbit.eth
-binding.pry
 puts eth.krw
 puts eth.trades
 puts eth.withdrawal_fee
@@ -22,4 +21,5 @@ puts eth.funds
 
 puts Korbit::Currency.krw_balance
 #puts eth.buy 100000, 0.1
-puts eth.unfilled_order
+#eth.sell 2000, 100.0
+puts eth.reload.unfilled_order
