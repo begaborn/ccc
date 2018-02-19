@@ -171,6 +171,14 @@ module Korbit
       client.sell params
     end
 
+    def cancel(tid)
+      params = {
+        currency_pair: currency_pair,
+        tr_id: tid,
+      }
+      client.cancel params
+    end
+
     def user_volume
       begin
         @user_volume ||= client.user_volume(currency_pair)
