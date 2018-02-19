@@ -64,11 +64,11 @@ module Korbit
     end
 
     def balance
-      @balacne ||= client.balance[currency_code]['available'].to_i
+      @balacne ||= client.balance[currency_code]['available'].to_f
     end
 
     def funds
-      @funds ||= client.balance[currency_code]['trade_in_use'].to_i
+      @funds ||= client.balance[currency_code]['trade_in_use'].to_f
     end
 
     def krw
@@ -80,7 +80,7 @@ module Korbit
     end
 
     def volume
-      @volume ||= (detailed_ticker['volume'].to_i || -1)
+      @volume ||= (detailed_ticker['volume'].to_f || -1)
     end
 
     def trades
