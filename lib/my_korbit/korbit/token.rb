@@ -19,7 +19,7 @@ module Korbit
     end
 
     def need_to_refresh?
-      @expired_at && (Time.now - 300) > @expired_at
+      @expired_at && (Time.now + 300) > @expired_at && @expired_at > Time.now
     end
 
     def refresh_token!
@@ -31,7 +31,7 @@ module Korbit
     end
 
     def attach_token(params = {})
-      refresh_token! unless valid?
+      refresh_token!
       params.merge access_token: @access_token, nonce: nonce
     end
 
@@ -51,6 +51,7 @@ module Korbit
       @access_token  = resp['access_token']
       @refresh_token = resp['refresh_token']
       @expired_at  = Time.now + resp['expires_in'] - 300
+      resp
     end
 
     def refresh_access_token
@@ -63,6 +64,7 @@ module Korbit
       @access_token  = resp['access_token']
       @refresh_token = resp['refresh_token']
       @expired_at  = Time.now + resp['expires_in'] - 300
+      resp
     end
   end
 end

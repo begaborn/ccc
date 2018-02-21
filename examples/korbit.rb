@@ -11,6 +11,7 @@ end
 eth = Korbit.eth
 puts eth.krw
 puts eth.trades
+eth.reload
 puts eth.withdrawal_fee
 puts eth.maker_fee
 puts eth.taker_fee

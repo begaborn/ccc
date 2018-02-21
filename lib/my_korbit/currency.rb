@@ -7,7 +7,7 @@ module Korbit
 
     class << self
       def client
-        @client ||= Korbit::Client.new(
+        Korbit::Client.new(
           client_id: conf[:api][:key],
           client_secret: conf[:api][:secret],
           username: conf[:api][:username],
@@ -16,7 +16,7 @@ module Korbit
       end
 
       def conf
-        @conf ||= {
+        {
           api: {
             key: ENV['KORBIT_API_KEY'],
             secret: ENV['KORBIT_API_SECRET'],
@@ -35,12 +35,13 @@ module Korbit
       end
     end
 
+    
     def client
-      self.class.client
+      @client ||= self.class.client
     end
 
     def conf
-      self.class.conf
+      @conf ||= self.class.conf
     end
 
     def krw_balance
