@@ -7,20 +7,28 @@ Ccc.configure do |config|
   config.yml_filename = File.dirname(File.expand_path(__FILE__)) + '/ccc.yml'
 end
 
-#puts Korbit.currencies
-eth = Korbit.eth
-puts eth.krw
-puts eth.trades
-eth.reload
-puts eth.withdrawal_fee
-puts eth.maker_fee
-puts eth.taker_fee
-puts eth.price
-puts eth.volume
-puts eth.balance
-puts eth.funds
-
-puts Korbit::Currency.krw_balance
-#puts eth.buy 100000, 0.1
-#eth.sell 2000, 100.0
-puts eth.reload.unfilled_order
+Korbit.currencies.each do |c|
+  currency = Korbit.send(c.to_sym)
+  puts '-----------------------------------'
+  puts "client = #{currency.client}"
+  puts "config = #{currency.conf}"
+  puts "currency_code = #{currency.currency_code}"
+  puts "default_pair = #{currency.default_pair}"
+  puts "currency_pair = #{currency.currency_pair}"
+  puts "price = #{currency.price}"
+  puts "volume = #{currency.volume}"
+  currency.reload
+  puts "balance = #{currency.balance}"
+  puts "locked_balance = #{currency.locked_balance}"
+  puts "available_balance = #{currency.available_balance}"
+  puts "balance = #{currency.balance_pair}"
+  puts "locked_balance = #{currency.locked_balance_pair}"
+  puts "available_balance = #{currency.available_balance_pair}"
+  puts "to_pair = #{currency.to_pair}"
+  puts "maker fee = #{currency.maker_fee}"
+  puts "taker fee = #{currency.taker_fee}"
+  puts "withdrawal fee = #{currency.withdrawal_fee}"
+  puts "my_orders = #{currency.my_orders}"
+  puts ''
+  sleep 1
+end

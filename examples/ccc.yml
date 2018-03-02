@@ -33,3 +33,21 @@ zaif:
       maker: 0.0
       taker: 0.001
 
+bitbank:
+  btc:
+    fee:
+      maker: 0
+      taker: 0
+  bch:
+    fee:
+      maker: 0
+      taker: 0
+  eth:
+    fee:
+      maker: 0
+      taker: 0
+  xrp:
+    fee:
+      maker: 0
+      taker: 0
+

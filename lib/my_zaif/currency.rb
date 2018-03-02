@@ -10,7 +10,7 @@ module Zaif
       end
 
       def conf
-        @conf ||= {
+        {
           api: {
             key: ENV['ZAIF_API_KEY'], secret: ENV['ZAIF_API_SECRET'],
           },
@@ -18,32 +18,56 @@ module Zaif
       end
     end
 
+    def client
+      @client ||= self.class.client
+    end
+
     def currency_code
       super.downcase
     end
 
-    def stream(output = nil)
-      client.stream(currency_code, "jpy", output)
+    def default_pair
+      'jpy'
+    end
+
+    def price
+      ticker['last'].to_i
+    end
+
+    def volume
+      ticker['volume'].to_i
+    end
+
+    def trades
+      get_trades.map do |trade|
+        trade.tap do |t|
+          t['side'] = (t.delete('trade_type') == 'ask' ? 'buy' : 'sell')
+        end
+      end
     end
 
     def balance
-      balance = info_without_transactions['deposit'][currency_code] || 0
-      if balance.nil?
-        puts "Warning: Currency Code #{currency_code} is Not Supported for #{market_name}"
-      end
-      balance || 0.0
+      info_without_transactions['deposit'][currency_code].to_f
     end
 
-    def funds
-      balance = info_without_transactions['funds'][currency_code] || 0
-      if balance.nil?
-        puts "Warning: Currency Code #{currency_code} is Not Supported for #{market_name}"
-      end
-      balance || 0.0
+    def locked_balance
+      balance_pair - available_balance_pair
     end
 
-    def jpy
-      balance * price
+    def available_balance
+      info_without_transactions['funds'][currency_code].to_f
+    end
+
+    def balance_pair
+      info_without_transactions['deposit'][pair].to_f
+    end
+
+    def locked_balance_pair
+      balance_pair - available_balance_pair
+    end
+
+    def available_balance_pair
+      info_without_transactions['funds'][pair].to_f
     end
 
     %w(withdrawal maker taker).each do |type|
@@ -56,6 +80,40 @@ module Zaif
         end
         fee
       end
+    end
+
+    def buy(amount, price: nil, limit: true)
+      price = self.price if limit && price.nil?
+      client.bid currency_code, price, amount, limit, pair
+    end
+
+    def sell(amount, price: nil, limit: true)
+      price = self.price if limit && price.nil?
+      client.sell currency_code, price, amount, limit, pair
+    end
+
+    def cancel(tid)
+      client.cancel(tid)
+    end
+
+    def my_orders
+      active_orders.map do |k,v|
+        {
+          'id'     => k,
+          'date'   => v['timestamp'],
+          'amount' => v['amount'].to_f,
+          'price'  => v['price'].to_f,
+          'side'   => (v['action'] == 'ask' ? 'sell' : 'buy'),
+        }
+      end
+    end
+
+    def board
+      depth
+    end
+
+    def withdraw(address, amount, option = {})
+      client.withdraw(currency_code, address, amount, option)
     end
 
     # +: Buyers are more than sellers(may be increased the price)
@@ -113,10 +171,6 @@ module Zaif
       end
     end
 
-    def volume
-      ticker['volume'].to_i
-    end
-
     def latest_volume
 
     end
@@ -125,13 +179,11 @@ module Zaif
       ticker['vwap'].to_i
     end
 
-    def price
-      @price ||= ticker['last'].to_i
+    def stream(output = nil)
+      client.stream(currency_code, "jpy", output)
     end
 
-    def withdraw(address, amount, option = {})
-      client.withdraw(currency_code, address, amount, option)
-    end
+    private
 
     def info
       @info ||= client.get_info
@@ -149,11 +201,7 @@ module Zaif
       end
     end
 
-    def order_books
-      @trades ||= client.get_trades(currency_code.downacase)
-    end
-
-    def trades
+    def get_trades
       begin
         @trades ||= client.get_trades(currency_code.downcase)
       rescue => e
@@ -172,6 +220,14 @@ module Zaif
     def depth
       begin
         @depth ||= client.get_depth(currency_code)
+      rescue => e
+        {}
+      end
+    end
+
+    def active_orders
+      begin
+        @active_orders ||= client.get_active_orders(currency_pair: currency_pair)
       rescue => e
         {}
       end

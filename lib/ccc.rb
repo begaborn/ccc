@@ -8,6 +8,7 @@ require 'my_coincheck'
 require 'my_bitflyer'
 require 'my_korbit'
 require 'my_bitbank'
+require 'my_bithumb'
 
 module Ccc
   def configure
@@ -19,7 +20,7 @@ module Ccc
   end
   module_function :configure, :configuration
 
-  MARKETS = ['bitflyer', 'zaif', 'korbit', 'coincheck']
+  MARKETS = ['bitflyer', 'zaif', 'korbit', 'bitbank', 'bithumb']
 
   def currency(market, currency_code)
     require "my_#{market}"

@@ -19,8 +19,8 @@ module Market
       end
     end
 
-    def initialize(pair = 'jpy', market_conf = load_default_yml)
-      @pair = pair
+    def initialize(pair = nil, market_conf = load_default_yml)
+      @pair = pair || default_pair
       @market_conf = market_conf[market_name] || {}
     end
 
@@ -49,8 +49,12 @@ module Market
       self.class.client
     end
 
+    def to_pair
+      (balance * price).round(3)
+    end
+
     def conf
-      self.class.conf.merge(market_conf)
+      self.class.conf.merge(@market_conf)
     end
 
     def volume
@@ -73,8 +77,8 @@ module Market
       raise NotImplementedError.new("Not Supported: #{self.class}##{__method__}")
     end
 
-    def jpy
-      balance * price
+    def default_pair
+      raise NotImplementedError.new("Not Supported: #{self.class}##{__method__}")
     end
 
     private
