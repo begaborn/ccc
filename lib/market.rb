@@ -37,9 +37,10 @@ module Market
     end
     alias_method :market_name, :namespace
 
-    def currency_code
+    def code
       self.class.code
     end
+    alias_method :currency_code, :code
 
     def currency_pair
       "#{currency_code}_#{pair}"
