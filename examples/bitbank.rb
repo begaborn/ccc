@@ -28,6 +28,7 @@ Bitbank.currencies.each do |c|
   puts "maker fee = #{currency.maker_fee}"
   puts "taker fee = #{currency.taker_fee}"
   puts "withdrawal fee = #{currency.withdrawal_fee}"
+  puts "orderable_amount = #{currency.orderable_amount}"
   puts "my_orders = #{currency.my_orders}"
   puts ''
   sleep 1

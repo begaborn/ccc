@@ -1,5 +1,4 @@
 require 'util'
-require 'transaction_log'
 module Market
 
   class NotConfigured < StandardError; end
@@ -80,6 +79,11 @@ module Market
 
     def default_pair
       raise NotImplementedError.new("Not Supported: #{self.class}##{__method__}")
+    end
+
+    def orderable_amount
+      digit = Math.log10(price.to_i).to_i
+      (available_balance_pair / price).round_down(digit)
     end
 
     private
