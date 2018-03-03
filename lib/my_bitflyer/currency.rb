@@ -17,12 +17,20 @@ module Bitflyer
       end
 
       def conf
-        @conf ||= {
+        {
           api: {
             key: ENV['BITFLYER_API_KEY'], secret: ENV['BITFLYER_API_SECRET'],
           },
         }
       end
+    end
+
+    def currency_code
+      super.downcase
+    end
+
+    def default_pair
+      'jpy'
     end
 
     def client

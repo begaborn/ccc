@@ -18,10 +18,6 @@ module Zaif
       end
     end
 
-    def client
-      @client ||= self.class.client
-    end
-
     def currency_code
       super.downcase
     end
