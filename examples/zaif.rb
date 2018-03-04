@@ -15,7 +15,7 @@ Zaif.currencies.each do |c|
   puts "default_pair = #{currency.default_pair}"
   puts "currency_pair = #{currency.currency_pair}"
   puts "price = #{currency.price}"
-  puts "volume = #{currency.volume}"
+  puts "volume = #{currency.volume24h}"
   currency.reload
   puts "balance = #{currency.balance}"
   puts "locked_balance = #{currency.locked_balance}"
@@ -28,7 +28,7 @@ Zaif.currencies.each do |c|
   puts "taker fee = #{currency.taker_fee}"
   puts "withdrawal fee = #{currency.withdrawal_fee}"
   puts "my_orders = #{currency.my_orders}"
-  puts "vwap = #{currency.vwap}"
+  puts "vwap = #{currency.vwap24h}"
   puts "board = #{currency.board}"
   puts ''
   sleep 1

@@ -16,7 +16,7 @@ Korbit.currencies.each do |c|
   puts "default_pair = #{currency.default_pair}"
   puts "currency_pair = #{currency.currency_pair}"
   puts "price = #{currency.price}"
-  puts "volume = #{currency.volume}"
+  puts "volume = #{currency.volume24}"
   currency.reload
   puts "balance = #{currency.balance}"
   puts "locked_balance = #{currency.locked_balance}"
