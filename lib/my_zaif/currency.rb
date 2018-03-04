@@ -30,8 +30,8 @@ module Zaif
       ticker['last'].to_i
     end
 
-    def volume
-      ticker['volume'].to_i
+    def volume24h
+      ticker['volume'].to_f
     end
 
     def trades
@@ -171,8 +171,8 @@ module Zaif
 
     end
 
-    def vwap
-      ticker['vwap'].to_i
+    def vwap24h
+      ticker['vwap'].to_f
     end
 
     def stream(output = nil)

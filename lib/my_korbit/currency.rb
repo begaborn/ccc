@@ -35,7 +35,7 @@ module Korbit
       @price ||= (ticker['last'].to_i || -1)
     end
 
-    def volume
+    def volume24h
       @volume ||= (detailed_ticker['volume'].to_f || -1)
     end
 

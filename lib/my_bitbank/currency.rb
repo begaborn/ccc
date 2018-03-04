@@ -30,7 +30,7 @@ module Bitbank
       ticker['last'].to_f
     end
 
-    def volume
+    def volume24h
       ticker['vol'].to_f
     end
 
