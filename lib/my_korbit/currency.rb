@@ -102,7 +102,7 @@ module Korbit
       price = self.price if limit && price.nil?
       params = {
         currency_pair: currency_pair,
-        price: price,
+        price: price.to_i,
         coin_amount: amount,
         type: type
       }
