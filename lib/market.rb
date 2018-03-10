@@ -80,7 +80,18 @@ module Market
       raise NotImplementedError.new("Not Supported: #{self.class}##{__method__}")
     end
 
-    def orderable_amount
+    def buyable_amount(limit_cash: nil, price: nil)
+      cash = [(limit_cash.nil? ? available_balance_pair : limit_cash.to_i), available_balance_pair].min
+      orderable_amount(balance: cash, price: price).round_down(amount_digit)
+    end
+
+    def sellable_amount(limit_coin: nil)
+      [(limit_coin.nil? ? available_balance : limit_coin.to_f), available_balance].min.round_down(amount_digit)
+    end
+
+    def orderable_amount(balance: nil, price: nil)
+      price = price || self.price
+      available_balance_pair = balance || self.available_balance_pair
       (available_balance_pair.to_f / price.to_f).round_down(amount_digit)
     end
 

@@ -28,6 +28,8 @@ Zaif.currencies.each do |c|
   puts "taker fee = #{currency.taker_fee}"
   puts "withdrawal fee = #{currency.withdrawal_fee}"
   puts "orderable_amount = #{currency.orderable_amount}"
+  puts "sellable_amount = #{currency.sellable_amount}"
+  puts "buyable_amount = #{currency.buyable_amount}"
   puts "my_orders = #{currency.my_orders}"
   puts "vwap = #{currency.vwap24h}"
   puts "board = #{currency.board}"
