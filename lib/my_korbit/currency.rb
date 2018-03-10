@@ -121,11 +121,11 @@ module Korbit
       @my_order ||=
         orders_open.map do |o|
           {
-            'id'     => t['id'].to_i,
+            'id'     => o['id'].to_i,
             'date'   => (o['timestamp'] / 1000).to_i,
             'amount' => o['total']['value'].to_f,
             'price'  => o['price']['value'].to_f,
-            'side'   => (t['type'] == 'ask' ? 'sell' : 'buy'),
+            'side'   => (o['type'] == 'ask' ? 'sell' : 'buy'),
           }
         end
     end
