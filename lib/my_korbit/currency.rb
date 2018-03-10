@@ -90,8 +90,8 @@ module Korbit
       price = self.price if limit && price.nil?
       params = {
         currency_pair: currency_pair,
-        price: price.to_i,
-        coin_amount: amount,
+        price: price.to_i.round_down(price_digit),
+        coin_amount: amount.round_down(amount_digit),
         type: type
       }
       client.buy params
@@ -102,8 +102,8 @@ module Korbit
       price = self.price if limit && price.nil?
       params = {
         currency_pair: currency_pair,
-        price: price.to_i,
-        coin_amount: amount,
+        price: price.to_i.round_down(price_digit),
+        coin_amount: amount.round_down(amount_digit),
         type: type
       }
       client.sell params

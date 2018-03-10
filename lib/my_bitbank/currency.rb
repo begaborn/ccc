@@ -27,7 +27,7 @@ module Bitbank
     end
 
     def price
-      ticker['last'].to_f
+      ticker['last'].to_f.round_down(price_digit)
     end
 
     def volume24h
@@ -39,7 +39,7 @@ module Bitbank
         trade.tap do |t|
           t['date'] = (t.delete('executed_at') / 1000).to_i
           t['amount'] = t['amount'].to_f
-          t['price'] = t['price'].to_i
+          t['price'] = t['price'].to_f.round_down(price_digit)
           t['tid'] = t.delete('transaction_id')
         end
       end
@@ -90,8 +90,8 @@ module Bitbank
       price = self.price if limit && price.nil?
       res = client.create_order(
         currency_pair,
-        amount,
-        price,
+        amount.round_down(amount_digit),
+        price.round_down(price_digit),
         'buy',
         type
       )
@@ -103,8 +103,8 @@ module Bitbank
       price = self.price if price.nil?
       res = client.create_order(
         currency_pair,
-        amount,
-        price,
+        amount.round_down(amount_digit),
+        price.round_down(price_digit),
         'sell',
         type
       )
@@ -125,8 +125,8 @@ module Bitbank
           {
             'id'     => o['order_id'],
             'date'   => (o['ordered_at'] / 1000).to_i,
-            'amount' => o['start_amount'].to_f,
-            'price'  => o['price'].to_f,
+            'amount' => o['start_amount'].to_f.round_down(amount_digit),
+            'price'  => o['price'].to_f.round_down(price_digit),
             'side'   => o['side'],
           }
         end
@@ -136,6 +136,10 @@ module Bitbank
     end
 
     def withdraw
+    end
+
+    def amount_digit
+      4
     end
 
     private

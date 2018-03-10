@@ -80,12 +80,12 @@ module Zaif
 
     def buy(amount, price: nil, limit: true)
       price = self.price if limit && price.nil?
-      client.bid currency_code, price, amount, limit, pair
+      client.bid currency_code, price.round_down(price_digit), amount.round_down(amount_digit), limit, pair
     end
 
     def sell(amount, price: nil, limit: true)
       price = self.price if limit && price.nil?
-      client.sell currency_code, price, amount, limit, pair
+      client.sell currency_code, price.round_down(price_digit), amount.round_down(amount_digit), limit, pair
     end
 
     def cancel(tid)

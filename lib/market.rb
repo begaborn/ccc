@@ -82,8 +82,15 @@ module Market
     end
 
     def orderable_amount
-      digit = Math.log10(price.to_i).to_i
-      (available_balance_pair / price).round_down(digit)
+      (available_balance_pair.to_f / price.to_f).round_down(amount_digit)
+    end
+
+    def price_digit
+      0
+    end
+
+    def amount_digit
+      0
     end
 
     private
