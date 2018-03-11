@@ -112,9 +112,10 @@ module Bitbank
     end
 
     def cancel(tid)
+
       res = client.cancel_order(
         currency_pair,
-        tid
+        tid.to_i
       )
       JSON.parse(res)
     end
