@@ -134,7 +134,6 @@ module Bitbank
 
     def find_order(id)
       order = order(id)
-      binding.pry
       return unless order
       order.tap do |o|
         o['id'] = o['order_id']
