@@ -145,6 +145,22 @@ module Korbit
         end
     end
 
+    def find_order(id)
+      order = order(id)
+      return unless order
+      order.tap do |o|
+        o['id'] = o['id'].to_i
+        o['side'] = (o['side'] == 'ask' ? 'sell' : 'buy')
+        o['date'] = (o['created_at'] / 1000).to_i
+        o['amount'] = o['order_amount']
+        o.delete('created_at')
+        o.delete('order_amount')
+        o.delete('fee')
+        o.delete('order_total')
+        o.delete('filled_total')
+      end
+    end
+
     def boards
       orderbook
     end
@@ -176,6 +192,20 @@ module Korbit
       rescue => e
         puts e
         {}
+      end
+    end
+
+    def order(id)
+      params = {
+        currency_pair: currency_pair,
+        id: id,
+        limit: 1,
+      }
+      begin
+        client.orders(params).first
+      rescue => e
+        puts e
+        false
       end
     end
 

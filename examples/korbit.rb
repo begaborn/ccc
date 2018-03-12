@@ -21,6 +21,7 @@ Korbit.currencies.each do |c|
   puts "order_id = #{order_id}"
   currency.reload
   puts "my_orders = #{currency.my_orders}"
+  puts "find_order = #{currency.find_order(order_id)}"
   puts "locked_balance = #{currency.locked_balance}"
   puts "available_balance = #{currency.available_balance}"
   puts "balance_pair = #{currency.balance_pair}"

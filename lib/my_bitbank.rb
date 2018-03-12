@@ -23,3 +23,15 @@ module Bitbank
     module_function currency_sym
   end
 end
+
+class Bitbankcc
+  def read_order(pair, order_id)
+    path = "/v1/user/spot/order"
+    nonce = Time.now.to_i.to_s
+    params = {
+      pair: pair,
+      order_id: order_id
+    }.compact
+    request_for_get(path, nonce, params)
+  end
+end

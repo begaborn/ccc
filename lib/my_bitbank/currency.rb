@@ -132,6 +132,28 @@ module Bitbank
         end
     end
 
+    def find_order(id)
+      order = order(id)
+      binding.pry
+      return unless order
+      order.tap do |o|
+        o['id'] = o['order_id']
+        o['currency_pair'] = o['pair']
+        o['date'] = (o['ordered_at'] / 1000).to_i
+        o['amount'] = o['start_amount']
+        o['filled_amount'] = o['executed_amount']
+        o['status'] = o['status'].downcase
+        o.delete('order_id')
+        o.delete('pair')
+        o.delete('type')
+        o.delete('start_amount')
+        o.delete('remaining_amount')
+        o.delete('executed_amount')
+        o.delete('average_price')
+        o.delete('ordered_at')
+      end
+    end
+
     def boards
     end
 
@@ -151,6 +173,12 @@ module Bitbank
 
     def ticker
       @ticker ||= JSON.parse(client.read_ticker(currency_pair).body)['data'] || []
+    end
+
+    def order(id)
+      res = JSON.parse(client.read_order(currency_pair, id))
+      return false if res['success'] != 1
+      res['data']
     end
 
     def orders
