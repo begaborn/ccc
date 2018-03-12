@@ -95,7 +95,7 @@ module Bitbank
         'buy',
         type
       )
-      JSON.parse(res)
+      order_res(res)
     end
 
     def sell(amount, price: nil, limit: true)
@@ -108,16 +108,15 @@ module Bitbank
         'sell',
         type
       )
-      JSON.parse(res)
+      order_res(res)
     end
 
     def cancel(tid)
-
       res = client.cancel_order(
         currency_pair,
         tid.to_i
       )
-      JSON.parse(res)
+      order_res(res)
     end
 
     def my_orders
@@ -144,6 +143,12 @@ module Bitbank
     end
 
     private
+    def order_res(res)
+      res_json = JSON.parse(res)
+      return false if res_json['success'] != 1
+      res_json['data']['order_id']
+    end
+
     def ticker
       @ticker ||= JSON.parse(client.read_ticker(currency_pair).body)['data'] || []
     end

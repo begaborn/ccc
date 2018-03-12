@@ -5,7 +5,7 @@ module Korbit
     end
 
     def price_digit
-      -1
+      -2
     end
   end
 end

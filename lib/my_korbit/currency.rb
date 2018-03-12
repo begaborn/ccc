@@ -3,7 +3,7 @@ module Korbit
   class Currency < Market::Currency
     class << self
       def client
-        Korbit::Client.new(
+        @client ||= Korbit::Client.new(
           client_id: conf[:api][:key],
           client_secret: conf[:api][:secret],
           username: conf[:api][:username],
@@ -94,7 +94,12 @@ module Korbit
         coin_amount: amount.round_down(amount_digit),
         type: type
       }
-      client.buy params
+      begin
+        res = client.buy params
+        order_res(res)
+      rescue => e
+        false
+      end
     end
 
     def sell(amount, price: nil, limit: true)
@@ -106,7 +111,12 @@ module Korbit
         coin_amount: amount.round_down(amount_digit),
         type: type
       }
-      client.sell params
+      begin
+        res = client.sell params
+        order_res(res)
+      rescue => e
+        false
+      end
     end
 
     def cancel(tid)
@@ -114,7 +124,12 @@ module Korbit
         currency_pair: currency_pair,
         tr_id: tid,
       }
-      client.cancel params
+      begin
+        res = client.cancel params
+        order_res(res.first)
+      rescue => e
+        false
+      end
     end
 
     def my_orders
@@ -138,6 +153,11 @@ module Korbit
     end
 
     private
+    def order_res(res)
+      return false if res['status'] != 'success'
+      res['orderId']
+    end
+
     def orderbook
       begin
         @boards ||= client.orderbook(currency_pair)

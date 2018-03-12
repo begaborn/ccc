@@ -16,8 +16,15 @@ Korbit.currencies.each do |c|
   puts "default_pair = #{currency.default_pair}"
   puts "currency_pair = #{currency.currency_pair}"
   puts "price = #{currency.price}"
+  amount = currency.buyable_amount(limit_cash: 10000, price: currency.price * 0.7)
+  order_id = nil
+  while !order_id do
+    order_id = currency.buy amount, price: currency.price * 0.8
+    puts "order_id = #{order_id}"
+    sleep 2
+  end
   currency.reload
-  puts "balance = #{currency.balance}"
+  puts "my_orders = #{currency.my_orders}"
   puts "locked_balance = #{currency.locked_balance}"
   puts "available_balance = #{currency.available_balance}"
   puts "balance_pair = #{currency.balance_pair}"
@@ -30,6 +37,13 @@ Korbit.currencies.each do |c|
   puts "orderable_amount = #{currency.orderable_amount}"
   puts "sellable_amount = #{currency.sellable_amount}"
   puts "buyable_amount = #{currency.buyable_amount}"
+  res = nil
+  while !res do
+    res = currency.cancel order_id
+    puts "canceled order_id = #{res}"
+    sleep 2
+  end
+  currency.reload
   puts "my_orders = #{currency.my_orders}"
   puts ''
   sleep 1

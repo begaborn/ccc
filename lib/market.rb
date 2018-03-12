@@ -48,12 +48,12 @@ module Market
       self.class.client
     end
 
-    def to_pair
-      (balance * price).round(3)
+    def conf
+      @conf ||= self.class.conf.merge(@market_conf)
     end
 
-    def conf
-      self.class.conf.merge(@market_conf)
+    def to_pair
+      (balance * price).round(3)
     end
 
     def volume

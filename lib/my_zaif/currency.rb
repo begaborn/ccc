@@ -81,15 +81,18 @@ module Zaif
     def buy(amount, price: nil, limit: true)
       price = self.price if limit && price.nil?
       client.bid currency_code, price.round_down(price_digit), amount.round_down(amount_digit), limit, pair
+      order_res(res)
     end
 
     def sell(amount, price: nil, limit: true)
       price = self.price if limit && price.nil?
-      client.sell currency_code, price.round_down(price_digit), amount.round_down(amount_digit), limit, pair
+      res = client.sell currency_code, price.round_down(price_digit), amount.round_down(amount_digit), limit, pair
+      order_res(res)
     end
 
     def cancel(tid)
       client.cancel(tid)
+      order_res(res)
     end
 
     def my_orders
@@ -180,6 +183,10 @@ module Zaif
     end
 
     private
+    def order_res(res)
+      return false if res['success'] != 1
+      res['return']['order_id']
+    end
 
     def info
       @info ||= client.get_info
