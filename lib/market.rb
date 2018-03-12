@@ -80,6 +80,18 @@ module Market
       raise NotImplementedError.new("Not Supported: #{self.class}##{__method__}")
     end
 
+    def buy(amount, price: nil, limit: true)
+      raise NotImplementedError.new("Not Supported: #{self.class}##{__method__}")
+    end
+
+    def sell(amount, price: nil, limit: true)
+      raise NotImplementedError.new("Not Supported: #{self.class}##{__method__}")
+    end
+
+    def cancel(tid)
+      raise NotImplementedError.new("Not Supported: #{self.class}##{__method__}")
+    end
+
     def buyable_amount(limit_cash: nil, price: nil)
       cash = [(limit_cash.nil? ? available_balance_pair : limit_cash.to_i), available_balance_pair].min
       orderable_amount(balance: cash, price: price).round_down(amount_digit)
@@ -101,6 +113,36 @@ module Market
 
     def amount_digit
       0
+    end
+
+    def stickily_buy(amount, price: nil, limit: true, retry_count: 10)
+      res = false
+      1.step do |index|
+        res = buy amount, price: price, limit: limit
+        break if index >= retry_count || res
+        sleep 1
+      end
+      res
+    end
+
+    def stickily_sell(amount, price: nil, limit: true, retry_count: 10)
+      res = false
+      1.step do |index|
+        res = sell amount, price: price, limit: limit
+        break if index >= retry_count || res
+        sleep 1
+      end
+      res
+    end
+
+    def stickily_cancel(tid, retry_count: 10)
+      res = false
+      1.step do |index|
+        res = cancel tid
+        break if index >= retry_count || res
+        sleep 1
+      end
+      res
     end
 
     private

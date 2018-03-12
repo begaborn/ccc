@@ -18,12 +18,8 @@ Bitbank.currencies.each do |c|
   puts "price = #{currency.price}"
   puts "volume = #{currency.volume24h}"
   amount = currency.buyable_amount(limit_cash: 1000, price: currency.price * 0.7)
-  order_id = nil
-  while !order_id do
-    order_id = currency.buy amount, price: currency.price * 0.8
-    puts "order_id = #{order_id}"
-    sleep 2
-  end
+  order_id = currency.stickily_buy amount, price: currency.price * 0.8
+  puts "order_id = #{order_id}"
   currency.reload
   puts "my_orders = #{currency.my_orders}"
   puts "balance = #{currency.balance}"
@@ -39,12 +35,8 @@ Bitbank.currencies.each do |c|
   puts "orderable_amount = #{currency.orderable_amount}"
   puts "sellable_amount = #{currency.sellable_amount}"
   puts "buyable_amount = #{currency.buyable_amount}"
-  res = nil
-  while !res do
-    res = currency.cancel order_id
-    puts "canceled order_id = #{res}"
-    sleep 2
-  end
+  res = currency.stickily_cancel order_id
+  puts "canceled order_id = #{res}"
   currency.reload
   puts "my_orders = #{currency.my_orders}"
   puts ''
