@@ -142,6 +142,7 @@ module Bitbank
         o['amount'] = o['start_amount']
         o['filled_amount'] = o['executed_amount']
         o['status'] = o['status'].downcase
+        o['status'] = 'filled' if o['status'] == 'fully_filled'
         o.delete('order_id')
         o.delete('pair')
         o.delete('type')
