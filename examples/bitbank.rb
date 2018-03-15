@@ -15,6 +15,8 @@ Bitbank.currencies.each do |c|
   puts "currency_code = #{currency.currency_code}"
   puts "default_pair = #{currency.default_pair}"
   puts "currency_pair = #{currency.currency_pair}"
+  puts "price_round_down = #{currency.price_round_down(12345.12345)}"
+  puts "amount_round_down = #{currency.amount_round_down(123.12345678901)}"
   puts "price = #{currency.price}"
   puts "volume = #{currency.volume24h}"
   amount = currency.buyable_amount(limit_cash: 1000, price: currency.price * 0.7)

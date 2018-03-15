@@ -145,6 +145,14 @@ module Market
       res
     end
 
+    def price_round_down(price)
+      price.round_down(price_digit)
+    end
+
+    def amount_round_down(amount)
+      amount.round_down(amount_digit)
+    end
+
     private
 
     def load_default_yml
