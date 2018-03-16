@@ -92,6 +92,12 @@ module Market
       raise NotImplementedError.new("Not Supported: #{self.class}##{__method__}")
     end
 
+    def all_cancel
+      my_orders.each do |order|
+        stickily_cancel order['id']
+      end
+    end
+
     def buyable_amount(limit_cash: nil, price: nil)
       cash = [(limit_cash.nil? ? available_balance_pair : limit_cash.to_i), available_balance_pair].min
       orderable_amount(balance: cash, price: price).round_down(amount_digit)
