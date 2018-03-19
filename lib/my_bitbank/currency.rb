@@ -134,7 +134,7 @@ module Bitbank
 
     def find_order(id)
       order = order(id)
-      return unless order
+      return if order.nil? || order.empty?
       order.tap do |o|
         o['id'] = o['order_id']
         o['currency_pair'] = o['pair']
@@ -143,6 +143,8 @@ module Bitbank
         o['filled_amount'] = o['executed_amount']
         o['status'] = o['status'].downcase
         o['status'] = 'filled' if o['status'] == 'fully_filled'
+        o['status'] = 'unfilled' if o['status'] == 'canceled_unfilled'
+        o['status'] = 'partially_filled' if o['status'] == 'canceled_partially_filled'
         o.delete('order_id')
         o.delete('pair')
         o.delete('type')
