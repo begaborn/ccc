@@ -67,16 +67,23 @@ module Korbit
       get('constants', false)
     end
 
-    def buy(currency_pair: 'btc_krw', type: 'limit', price: 500, coin_amount: 1, fiat_amount: 1)
-      post 'user/orders/buy',
-        currency_pair: currency_pair,
-        type: type,
-        price: price,
-        coin_amount: coin_amount,
-        fiat_amount: fiat_amount
+    def buy(currency_pair: 'btc_krw', type: 'limit', price: nil, coin_amount: nil, fiat_amount: nil)
+      params = {}
+      params[:currency_pair] = currency_pair
+      params[:type] = type
+      params[:price] = price unless price.nil?
+      params[:coin_amount] = coin_amount unless coin_amount.nil?
+      params[:fiat_amount] = fiat_amount if coin_amount.nil? && fiat_amount.present?
+      post 'user/orders/buy', params
     end
 
-    def sell(currency_pair: 'btc_krw', type: 'limit', price: 500, coin_amount: 1)
+    def sell(currency_pair: 'btc_krw', type: 'limit', price: nil, coin_amount: nil)
+      params = {}
+      params[:currency_pair] = currency_pair
+      params[:type] = type
+      params[:price] = price unless price.nil?
+      params[:coin_amount] = coin_amount unless coin_amount.nil?
+
       post 'user/orders/sell',
         currency_pair: currency_pair,
         type: type,

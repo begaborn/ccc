@@ -87,10 +87,16 @@ module Korbit
 
     def buy(amount, price: nil, limit: true)
       type = limit ? 'limit' : 'market'
-      price = self.price if limit && price.nil?
+      p_price = if type == 'market'
+        nil
+      elsif price.nil?
+        self.price.to_i
+      else
+        price.to_i.round_down(price_digit)
+      end
       params = {
         currency_pair: currency_pair,
-        price: price.to_i.round_down(price_digit),
+        price: p_price,
         coin_amount: amount.round_down(amount_digit),
         type: type
       }
@@ -104,10 +110,17 @@ module Korbit
 
     def sell(amount, price: nil, limit: true)
       type = limit ? 'limit' : 'market'
-      price = self.price if limit && price.nil?
+      p_price = if type == 'market'
+        nil
+      elsif price.nil?
+        self.price.to_i
+      else
+        price.to_i.round_down(price_digit)
+      end
+
       params = {
         currency_pair: currency_pair,
-        price: price.to_i.round_down(price_digit),
+        price: p_price,
         coin_amount: amount.round_down(amount_digit),
         type: type
       }

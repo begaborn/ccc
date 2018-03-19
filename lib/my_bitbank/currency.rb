@@ -134,7 +134,7 @@ module Bitbank
 
     def find_order(id)
       order = order(id)
-      return if order.nil? || order.empty?
+      return unless order
       order.tap do |o|
         o['id'] = o['order_id']
         o['currency_pair'] = o['pair']
@@ -179,7 +179,7 @@ module Bitbank
 
     def order(id)
       res = JSON.parse(client.read_order(currency_pair, id))
-      return false if res['success'] != 1
+      return false if res['success'] != 1 || res['data'].nil? || res['data'].empty?
       res['data']
     end
 
