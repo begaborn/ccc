@@ -91,7 +91,7 @@ module Bitbank
       res = client.create_order(
         currency_pair,
         amount.round_down(amount_digit),
-        price.round_down(price_digit),
+        price.to_f.round_down(price_digit),
         'buy',
         type
       )
@@ -104,7 +104,7 @@ module Bitbank
       res = client.create_order(
         currency_pair,
         amount.round_down(amount_digit),
-        price.round_down(price_digit),
+        price.to_f.round_down(price_digit),
         'sell',
         type
       )
