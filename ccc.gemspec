@@ -26,8 +26,8 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "pry-byebug"
 
   spec.add_runtime_dependency 'zaif', '0.0.2'
-  spec.add_runtime_dependency 'bitflyer', '0.1.2'
-  spec.add_runtime_dependency 'ruby_coincheck_client', '0.3.0'
+#  spec.add_runtime_dependency 'bitflyer', '0.1.2'
+#  spec.add_runtime_dependency 'ruby_coincheck_client', '0.3.0'
   spec.add_runtime_dependency 'ruby_bitbankcc', '0.1.3'
   spec.add_runtime_dependency 'websocket-client-simple'
   spec.add_runtime_dependency 'activesupport'
