@@ -2,9 +2,9 @@
 ccc is a wrapper interface of Crypt Currency Exchanges API
 
 # Support
-[Bitbank API](https://docs.bitbank.cc)
-[Korbit API](https://apidocs.korbit.co.kr)
-[Zaif API](https://corp.zaif.jp/api-docs/)
+- [Bitbank API](https://docs.bitbank.cc)
+- [Korbit API](https://apidocs.korbit.co.kr)
+- [Zaif API](https://corp.zaif.jp/api-docs/)
 
 ## Installation
 #### Set Environment Variable For API KEY
