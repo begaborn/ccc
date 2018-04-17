@@ -14,6 +14,10 @@ Zaif.currencies.each do |c|
   puts "currency_code = #{currency.currency_code}"
   puts "default_pair = #{currency.default_pair}"
   puts "currency_pair = #{currency.currency_pair}"
+  puts "vpin = #{currency.vpin}"
+  puts "buy_rate = #{currency.latest_buy_rate}"
+  puts "sell_rate = #{currency.latest_sell_rate}"
+  next
   puts "price = #{currency.price}"
   puts "volume = #{currency.volume24h}"
   currency.reload

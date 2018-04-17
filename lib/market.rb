@@ -92,6 +92,78 @@ module Market
       raise NotImplementedError.new("Not Supported: #{self.class}##{__method__}")
     end
 
+    def trades
+      raise NotImplementedError.new("Not Supported: #{self.class}##{__method__}")
+    end
+
+    def vpin
+      bucket_num = 2
+      bucket_size = (latest_volume / bucket_num.to_f).round_down(amount_digit)
+      bucket_index = 0
+      bucket = []
+      trades.each do |data|
+        bucket[bucket_index] ||= {}
+        bucket[bucket_index]['sum'] ||= 0
+        bucket[bucket_index][data['side']] ||= 0
+
+        available_size = bucket_size - bucket[bucket_index]['sum']
+
+        if available_size < data['amount']
+          bucket[bucket_index]['sum'] += available_size
+          bucket[bucket_index][data['side']] += available_size
+
+          bucket_index += 1
+          break if bucket_index == bucket_num
+
+          bucket[bucket_index] ||= {}
+          bucket[bucket_index]['sum'] ||= 0
+          bucket[bucket_index][data['side']] ||= 0
+          bucket[bucket_index]['sum'] += (data['amount'] - available_size)
+          bucket[bucket_index][data['side']] += (data['amount'] - available_size)
+        else
+          bucket[bucket_index]['sum'] += data['amount']
+          bucket[bucket_index][data['side']] += data['amount']
+        end
+      end
+
+      sum_b = bucket.reduce(0) do |sum, b|
+        sum += (b['sell'].to_f - b['buy'].to_f).abs
+      end
+      (sum_b / (bucket_num * bucket_size).to_f).round(3)
+    end
+
+    def latest_volume
+      trades.sum do |t|
+        t['amount']
+      end
+    end
+
+    def latest_buy_volume
+      latest_volume_by('buy')
+    end
+
+    def latest_sell_volume
+      latest_volume_by('sell')
+    end
+
+    def latest_buy_rate
+      return 0 if latest_volume.zero?
+      ((latest_buy_volume / latest_volume).to_f *  100).round(1)
+    end
+
+    def latest_sell_rate
+      return 0 if latest_volume.zero?
+      ((latest_sell_volume / latest_volume).to_f *  100).round(1)
+    end
+
+    def latest_volume_by(side)
+      trades.select do |t|
+        t['side'] == side
+      end.sum do |t|
+        t['amount']
+      end
+    end
+
     def all_cancel
       my_orders.each do |order|
         stickily_cancel order['id']

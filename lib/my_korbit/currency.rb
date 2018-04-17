@@ -40,12 +40,26 @@ module Korbit
     end
 
     def trades
-      @trades ||= transactions.map do |trade|
-        trade.tap do |t|
-          t['date'] = (t.delete('timestamp') / 1000).to_i
-          t['amount'] = t['amount'].to_f
-          t['price'] = t['price'].to_i
+      trades = []
+      side_tmp = ''
+      transactions.each_cons(2) do |before, t|
+        if before['price'].to_i < t['price'].to_i
+          side_tmp = 'buy'
+        elsif before['price'].to_i > t['price'].to_i
+          side_tmp = 'sell'
         end
+        next if side_tmp.empty?
+        t_data = {
+          'date' => (t['timestamp'] / 1000).to_i,
+          'tid' => t['tid'],
+          'amount' => t['amount'].to_f,
+          'price' => t['price'].to_i,
+          'side' => side_tmp
+        }
+        trades << t_data
+      end
+      trades.sort_by do |t|
+        t['date']
       end
     end
 

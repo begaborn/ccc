@@ -35,13 +35,16 @@ module Bitbank
     end
 
     def trades
-      transactions.map do |trade|
-        trade.tap do |t|
-          t['date'] = (t.delete('executed_at') / 1000).to_i
-          t['amount'] = t['amount'].to_f
-          t['price'] = t['price'].to_f.round_down(price_digit)
-          t['tid'] = t.delete('transaction_id')
-        end
+      transactions.map do |t|
+        {
+          'date' => (t['executed_at'] / 1000).to_i,
+          'tid' => t['transaction_id'],
+          'amount' => t['amount'].to_f,
+          'price' => t['price'].to_f.round_down(price_digit),
+          'side' => t['side'],
+        }
+      end.sort_by do |t|
+          t['date']
       end
     end
 
@@ -120,16 +123,15 @@ module Bitbank
     end
 
     def my_orders
-      @my_orders ||=
-        orders.map do |o|
-          {
-            'id'     => o['order_id'],
-            'date'   => (o['ordered_at'] / 1000).to_i,
-            'amount' => o['start_amount'].to_f.round_down(amount_digit),
-            'price'  => o['price'].to_f.round_down(price_digit),
-            'side'   => o['side'],
-          }
-        end
+      orders.map do |o|
+        {
+          'id'     => o['order_id'],
+          'date'   => (o['ordered_at'] / 1000).to_i,
+          'amount' => o['start_amount'].to_f.round_down(amount_digit),
+          'price'  => o['price'].to_f.round_down(price_digit),
+          'side'   => o['side'],
+        }
+      end
     end
 
     def find_order(id)

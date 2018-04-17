@@ -35,10 +35,16 @@ module Zaif
     end
 
     def trades
-      get_trades.map do |trade|
-        trade.tap do |t|
-          t['side'] = (t.delete('trade_type') == 'ask' ? 'buy' : 'sell')
-        end
+      get_trades.map do |t|
+        {
+          'date' => t['date'],
+          'tid' => t['tid'],
+          'amount' => t['amount'],
+          'price' => t['price'],
+          'side' =>  (t['trade_type'] == 'ask' ? 'sell' : 'buy'),
+        }
+      end.sort_by do |t|
+        t['date']
       end
     end
 
@@ -168,10 +174,6 @@ module Zaif
       l_board.reduce(0) do |sum, (p, amount)|
         sum += ((p - price) * amount)
       end
-    end
-
-    def latest_volume
-
     end
 
     def vwap24h
