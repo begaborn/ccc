@@ -96,6 +96,42 @@ module Market
       raise NotImplementedError.new("Not Supported: #{self.class}##{__method__}")
     end
 
+    def opening_price
+      trades.first['price']
+    end
+
+    def closing_price
+      trades.last['price']
+    end
+
+    def high_price
+      trades.map do |t|
+        t['price']
+      end.max
+    end
+
+    def low_price
+      trades.map do |t|
+        t['price']
+      end.min
+    end
+
+    def bab_rate
+      digit = digit
+      t_cnt = []
+      index = 0
+      trades.each_cons(2) do |before, t|
+        if before['price'].flatten(3) == t['price'].flatten(3)
+          t_cnt[index] = t_cnt[index].to_i + 1
+        else
+          index += 1
+          t_cnt[index] = t_cnt[index].to_i + 1
+        end
+      end
+      t_cnt.compact!
+      (t_cnt.sum.to_f / t_cnt.size).round(2)
+    end
+
     def vpin
       bucket_num = 2
       bucket_size = (latest_volume / bucket_num.to_f).round_down(amount_digit)
@@ -245,10 +281,22 @@ class Float
     f = self.to_s.to_d.floor(digit).to_f
     digit > 0 ? f : f.to_i
   end
+
+  def flatten(digit)
+    round_down(digit - self.to_i.to_s.size)
+  end
 end
 
 class Fixnum
   def round_down(digit)
     self.to_s.to_d.floor(digit).to_i
+  end
+
+  def flatten(digit)
+    round_down(digit - self.to_s.size)
+  end
+
+  def prefix(digit)
+    self / (10 ** (self.to_s.size - digit))
   end
 end
