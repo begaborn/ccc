@@ -51,7 +51,7 @@ module Korbit
         next if side_tmp.empty?
         t_data = {
           'date' => (t['timestamp'] / 1000).to_i,
-          'tid' => t['tid'],
+          'tid' => t['tid'].to_i,
           'amount' => t['amount'].to_f,
           'price' => t['price'].to_i,
           'side' => side_tmp
