@@ -35,17 +35,28 @@ module Bitbank
     end
 
     def trades
-      transactions.map do |t|
-        {
+      trades = []
+      side_tmp = ''
+      transactions.sort_by do |t|
+        t['executed_at']
+      end.each_cons(2) do |before, t|
+        binding.pry
+        if before['price'].to_f < t['price'].to_f
+          side_tmp = 'buy'
+        elsif before['price'].to_f > t['price'].to_f
+          side_tmp = 'sell'
+        end
+        next if side_tmp.empty?
+        t_data = {
           'date' => (t['executed_at'] / 1000).to_i,
           'tid' => t['transaction_id'],
           'amount' => t['amount'].to_f,
           'price' => t['price'].to_f.round_down(price_digit),
-          'side' => t['side'],
+          'side' => side_tmp,
         }
-      end.sort_by do |t|
-          t['date']
+        trades << t_data
       end
+      trades
     end
 
     def balance

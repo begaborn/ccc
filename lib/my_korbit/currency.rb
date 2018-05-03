@@ -42,7 +42,9 @@ module Korbit
     def trades
       trades = []
       side_tmp = ''
-      transactions.each_cons(2) do |before, t|
+      transactions.sort_by do |t|
+        t['timestamp']
+      end.each_cons(2) do |before, t|
         if before['price'].to_i < t['price'].to_i
           side_tmp = 'buy'
         elsif before['price'].to_i > t['price'].to_i
@@ -58,9 +60,7 @@ module Korbit
         }
         trades << t_data
       end
-      trades.sort_by do |t|
-        t['date']
-      end
+      trades
     end
 
     def balance
