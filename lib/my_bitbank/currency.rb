@@ -40,7 +40,6 @@ module Bitbank
       transactions.sort_by do |t|
         t['executed_at']
       end.each_cons(2) do |before, t|
-        binding.pry
         if before['price'].to_f < t['price'].to_f
           side_tmp = 'buy'
         elsif before['price'].to_f > t['price'].to_f
