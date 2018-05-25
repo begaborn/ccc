@@ -26,6 +26,11 @@ Korbit.currencies.each do |c|
   puts "price_round_down = #{currency.price_round_down(12345.12345)}"
   puts "amount_round_down = #{currency.amount_round_down(123.12345678901)}"
   puts "price = #{currency.price}"
+  puts "mid_price = #{currency.mid_price}"
+  puts "asks = #{currency.asks}"
+  puts "bids = #{currency.bids}"
+  puts "best_ask = #{currency.best_ask}"
+  puts "best_bid = #{currency.best_bid}"
   amount = currency.buyable_amount(limit_cash: 10000, price: currency.price * 0.7)
   order_id = currency.stickily_buy amount, price: currency.price * 0.8
   puts "order_id = #{order_id}"

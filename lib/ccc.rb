@@ -21,8 +21,11 @@ module Ccc
   MARKETS = ['zaif', 'korbit', 'bitbank']
 
   def currency(market, currency_code)
-    require "my_#{market}"
-    market.classify.constantize.send(currency_code.downcase.to_sym)
+    @currency ||= {}
+    @currency[market] ||= {}
+    @currency[currency_code] ||=
+      require "my_#{market}" &&
+      market.classify.constantize.send(currency_code.downcase.to_sym)
   end
 
   def markets(markets = MARKETS)

@@ -267,6 +267,26 @@ module Market
       amount.round_down(amount_digit)
     end
 
+    def best_ask
+      asks.first.first.to_i
+    end
+
+    def best_bid
+      bids.first.first.to_i
+    end
+
+    def mid_price
+      (best_ask + best_bid) / 2
+    end
+
+    def asks
+      depth['asks']
+    end
+
+    def bids
+      depth['bids']
+    end
+
     private
 
     def load_default_yml

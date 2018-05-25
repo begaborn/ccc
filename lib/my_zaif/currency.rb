@@ -184,7 +184,16 @@ module Zaif
       client.stream(currency_code, "jpy", output)
     end
 
+    def depth
+      begin
+        @depth ||= client.get_depth(currency_code)
+      rescue => e
+        {}
+      end
+    end
+
     private
+
     def order_res(res)
       return false if res['success'] != 1
       res['return']['order_id']
@@ -217,14 +226,6 @@ module Zaif
     def ticker
       begin
         @ticker ||= client.get_ticker(currency_code.downcase)
-      rescue => e
-        {}
-      end
-    end
-
-    def depth
-      begin
-        @depth ||= client.get_depth(currency_code)
       rescue => e
         {}
       end

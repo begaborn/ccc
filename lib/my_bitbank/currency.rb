@@ -168,7 +168,8 @@ module Bitbank
       end
     end
 
-    def boards
+    def depth
+      @depth ||= JSON.parse(client.read_order_books(currency_pair))['data'] || []
     end
 
     def withdraw
@@ -179,6 +180,7 @@ module Bitbank
     end
 
     private
+
     def order_res(res)
       res_json = JSON.parse(res)
       return false if res_json['success'] != 1

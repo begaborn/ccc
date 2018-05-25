@@ -40,7 +40,12 @@ Zaif.currencies.each do |c|
   puts "buyable_amount = #{currency.buyable_amount}"
   puts "my_orders = #{currency.my_orders}"
   puts "vwap = #{currency.vwap24h}"
-  puts "board = #{currency.board}"
+  puts "board = #{currency.depth}"
+  puts "mid_price = #{currency.mid_price}"
+  puts "asks = #{currency.asks}"
+  puts "bids = #{currency.bids}"
+  puts "best_ask = #{currency.best_ask}"
+  puts "best_bid = #{currency.best_bid}"
   puts ''
   sleep 1
 end

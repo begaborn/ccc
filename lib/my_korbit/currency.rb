@@ -188,7 +188,7 @@ module Korbit
       end
     end
 
-    def boards
+    def depth
       orderbook
     end
 
@@ -203,7 +203,7 @@ module Korbit
 
     def orderbook
       begin
-        @boards ||= client.orderbook(currency_pair)
+        @orderbook ||= client.orderbook(currency_pair)
       rescue => e
         {}
       end
