@@ -15,6 +15,7 @@ Bitbank.currencies.each do |c|
   puts "currency_code = #{currency.currency_code}"
   puts "default_pair = #{currency.default_pair}"
   puts "currency_pair = #{currency.currency_pair}"
+  puts "min_amount = #{currency.min_amount}"
   puts "opening_price = #{currency.opening_price}"
   puts "closing_price = #{currency.closing_price}"
   puts "high_price = #{currency.high_price}"

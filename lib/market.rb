@@ -287,6 +287,10 @@ module Market
       depth['bids']
     end
 
+    def min_amount
+      (0.1 ** amount_digit).round(amount_digit)
+    end
+
     private
 
     def load_default_yml
