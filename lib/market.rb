@@ -268,15 +268,15 @@ module Market
     end
 
     def best_ask
-      asks.first.first.to_i
+      price_round_down(asks.first.first.to_f)
     end
 
     def best_bid
-      bids.first.first.to_i
+      price_round_down(bids.first.first.to_f)
     end
 
     def mid_price
-      (best_ask + best_bid) / 2
+      price_round_down((best_ask + best_bid) / 2)
     end
 
     def asks
