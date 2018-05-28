@@ -23,8 +23,8 @@ module Ccc
   def currency(market, currency_code)
     @currency ||= {}
     @currency[market] ||= {}
+    require "my_#{market}"
     @currency[currency_code] ||=
-      require "my_#{market}" &&
       market.classify.constantize.send(currency_code.downcase.to_sym)
   end
 
