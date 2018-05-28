@@ -24,7 +24,7 @@ module Ccc
     @currency ||= {}
     @currency[market] ||= {}
     require "my_#{market}"
-    @currency[currency_code] ||=
+    @currency[market][currency_code] ||=
       market.classify.constantize.send(currency_code.downcase.to_sym)
   end
 
