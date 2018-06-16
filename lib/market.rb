@@ -13,7 +13,7 @@ module Market
       alias_method :market_name, :namespace
 
       def code
-        self.to_s.split('::')[1]
+        self.to_s.split('::')[1].downcase
       end
     end
 
@@ -39,10 +39,6 @@ module Market
       self.class.code
     end
     alias_method :currency_code, :code
-
-    def currency_pair
-      "#{currency_code}_#{pair}"
-    end
 
     def client
       self.class.client
@@ -289,6 +285,10 @@ module Market
 
     def min_amount
       (0.1 ** amount_digit).round(amount_digit)
+    end
+
+    def currency_pair
+      "#{currency_code}_#{pair}"
     end
 
     private
