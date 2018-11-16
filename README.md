@@ -1,13 +1,7 @@
 # ccc
 CCC (Combined CryptoCurrency exchanges API) is a gem library that matches up lots of different interfaces for each cryptocurrency exchange's APIs, and thereby it makes the APIs easier to use.
 
-For instance, say you use each different exchange's APIs.
-
-You must create one module in accordance with "Zaif" exchange's interface and one module in accordance with "Bitbank" exchange's interface.
-
-You have to build the similar module twice.
-
-It's a very complex and tiresome business.
+For instance, say you use each different exchange's APIs. You must create one module in accordance with "Zaif" exchange's interface and one module in accordance with "Bitbank" exchange's interface. You have to build the similar module twice. It's a very complex and tiresome business.
 
 But if you add this gem, you can call up each API simply on the same interface.
 
