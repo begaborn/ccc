@@ -97,11 +97,11 @@ module Market
     end
 
     def sell_orders
-      (my_order || []).select { |o| o['side'] == 'sell' }
+      (my_orders || []).select { |o| o['side'] == 'sell' }
     end
 
     def buy_orders
-      (my_order || []).select { |o| o['side'] == 'buy' }
+      (my_orders || []).select { |o| o['side'] == 'buy' }
     end
 
     def opening_price
