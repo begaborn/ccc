@@ -1,6 +1,7 @@
 module Market
 
   class NotConfigured < StandardError; end
+  class ApiError < StandardError; end
 
   class Currency
     attr_accessor :pair
@@ -237,22 +238,22 @@ module Market
       0
     end
 
-    def stickily_buy(amount, price: nil, limit: true, retry_count: 10)
+    def stickily_buy(amount, price: nil, limit: true, retry_count: 3, interval: 30)
       res = false
       1.step do |index|
         res = buy amount, price: price, limit: limit
         break if index >= retry_count || res
-        sleep 1
+        sleep interval
       end
       res
     end
 
-    def stickily_sell(amount, price: nil, limit: true, retry_count: 10)
+    def stickily_sell(amount, price: nil, limit: true, retry_count: 3, interval: 30)
       res = false
       1.step do |index|
         res = sell amount, price: price, limit: limit
         break if index >= retry_count || res
-        sleep 1
+        sleep interval
       end
       res
     end

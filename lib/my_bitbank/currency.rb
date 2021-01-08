@@ -133,7 +133,10 @@ module Bitbank
     end
 
     def my_orders
-      orders.map do |o|
+      ord = orders
+      return false unless ord
+
+      ord.map do |o|
         {
           'id'     => o['order_id'],
           'date'   => (o['ordered_at'] / 1000).to_i,
@@ -193,12 +196,14 @@ module Bitbank
 
     def order(id)
       res = JSON.parse(client.read_order(currency_pair, id))
-      return false if res['success'] != 1 || res['data'].nil? || res['data'].empty?
+      raise Market::ApiError.new("API:order ErrorCode:#{res['data']['code']}") if res['success'] != 1 || res['data'].nil? || res['data'].empty?
       res['data']
     end
 
     def orders
-      @orders ||= JSON.parse(client.read_active_orders(currency_pair))['data']['orders'] || []
+      res = JSON.parse(client.read_active_orders(currency_pair))
+      raise Market::ApiError.new("API:active_orders ErrorCode:#{res['data']['code']}")  if res['success'] != 1 || res['data'].nil? || res['data'].empty?
+      res['data']['orders']
     end
 
     def jpy_asset
