@@ -46,7 +46,7 @@ module Korbit
         client_secret: @client_secret,
         username:      @username,
         password:      @password,
-        grant_type:    'password'
+        grant_type:    'client_credentials'
 
       @access_token  = resp['access_token']
       @refresh_token = resp['refresh_token']
