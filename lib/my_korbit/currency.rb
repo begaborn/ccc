@@ -31,6 +31,11 @@ module Korbit
       'krw'
     end
 
+    def reload
+      self.class.remove_instance_variable(:@client)
+      super
+    end
+
     def price
       @price ||= (ticker['last'].to_i || -1)
     end
