@@ -19,16 +19,14 @@ module Ccc
   end
   module_function :configure, :configuration
 
-  MARKETS = ['zaif', 'korbit', 'bitbank']
+  MARKETS = ['bitbank', 'bybit', 'upbit']
 
   def currency(market, currency_code)
-    require "my_#{market}"
     market.classify.constantize.send(currency_code.downcase.to_sym)
   end
 
   def markets(markets = MARKETS)
     @markets ||= markets.each_with_object(Hash.new({})) do |market, h1|
-      require "my_#{market}"
       h1[market] = "#{market.classify}::Currency".constantize.subclasses.each_with_object(Hash.new({})) do |currency, h2|
         h2[currency.code.downcase.to_sym] = "#{market.classify}".constantize.send(currency.code.downcase.to_sym)
       end

@@ -1,12 +1,7 @@
 $:.unshift(File.dirname(File.expand_path(__FILE__)) + '/../lib')
 require 'pry-byebug'
 require 'ccc'
-require 'my_bitbank'
 
-Ccc.configure do |config|
-  config.yml_filename = File.dirname(File.expand_path(__FILE__)) + '/ccc.yml'
-end
-binding.pry
 Bitbank.currencies.each do |c|
   currency = Bitbank.send(c.to_sym)
   puts '-----------------------------------'

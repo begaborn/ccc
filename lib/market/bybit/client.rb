@@ -25,7 +25,7 @@ module Bybit
 
     # Cancel Order
     # https://bybit-exchange.github.io/docs/spot/?console#t-getactive
-    def cancel_order(id)
+    def delete_order(id)
       delete('/spot/v1/order', { orderLinkId: id })
     end
 

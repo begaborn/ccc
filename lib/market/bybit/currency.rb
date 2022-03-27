@@ -16,32 +16,63 @@ module Bybit
     end
 
     def balance
-      res = client.account
-      res
+      asset['total'].to_f
     end
+
+    def available_balance
+      asset['locked'].to_f
+    end
+
+    def locked_balance
+      asset['locked'].to_f
+    end
+
 
     def buy(amount, price: nil, limit: true, retry: 3)
       type = limit ? 'LIMIT' : 'MARKET'
       price = self.price if limit && price.nil?
       res = client.order('Buy', amount.round_down(amount_digit), type, price: price.to_f.round_down(price_digit))
+      res['result']['orderLinkId']
     end
 
     def sell(amount, price: nil, limit: true, retry: 3)
       type = limit ? 'limit' : 'market'
       price = self.price if price.nil?
-      client.order('Sell', amount.round_down(amount_digit), type, price: price.to_f.round_down(price_digit))
+      res = client.order('Sell', amount.round_down(amount_digit), type, price: price.to_f.round_down(price_digit))
+      res['result']['orderLinkId']
     end
 
     def cancel(id)
-      client.cancel_order(id)
+      res = client.delete_order(id)
+      res['result']['orderLinkId']
     end
 
     def my_orders
-      client.open_orders
+      res = client.open_orders
+      res['result'].select do |r|
+        r['status'] == 'NEW'
+      end.map do |r|
+        {
+          'id'     => r['orderLinkId'],
+          'date'   => r['updateTime'].to_i,
+          'amount' => r['origQty'],
+          'price'  => r['price'],
+          'side'   => r['side'],
+        }
+      end
     end
 
     def find_order(id)
-      client.get_order(id)
+      res = client.get_order(id)
+      r = res['result']
+      {
+        'id' => r['orderLinkId'],
+        'currency_pair' => r['symbol'],
+        'date' => r['updateTime'].to_i,
+        'amount' => r['origQty'],
+        'filled_amount' => r['executedQty'],
+        'status' => convert_status(r['status'])
+      }
     end
 
     def amount_digit
@@ -57,6 +88,26 @@ module Bybit
 
     def symbol
       currency_pair.gsub('_', '').upcase
+    end
+
+    def asset
+      @asset ||= begin
+        res = client.account
+        res['result']['balances'].find do |r|
+          r['coin'] == currency_code.upcase
+        end || {}
+      end
+    end
+
+    def convert_status(status)
+      case status
+      when 'FILLED'
+        'filled'
+      when 'PARTIALLY_FILLED'
+        'partially_filled'
+      else
+        'unfilled'
+      end
     end
 
 
