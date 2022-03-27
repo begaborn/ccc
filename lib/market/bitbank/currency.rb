@@ -3,7 +3,7 @@ module Bitbank
   class Currency < Market::Currency
     class << self
       def client
-        @client ||= Bitbankcc.new(
+        @client ||= Client.new(
           conf[:api][:key],
           conf[:api][:secret]
         )
@@ -227,4 +227,5 @@ module Bitbank
     end
   end
 end
+
 Dir[File.join(File.expand_path(File.dirname(__FILE__)), 'currency/*.rb')].each { |f| require f }

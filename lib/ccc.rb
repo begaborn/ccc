@@ -1,12 +1,13 @@
 require "ccc/version"
 require "ccc/configuration"
+require 'currency_helper'
 require 'active_support/dependencies/autoload'
 require 'active_support/core_ext'
 require 'market'
-require 'my_zaif'
-require 'my_korbit'
-require 'my_bitbank'
-require 'my_bithumb'
+
+Dir.glob('**/*rb', File::FNM_DOTMATCH, base: File.dirname(__FILE__)).each do |file|
+  require file
+end
 
 module Ccc
   def configure

@@ -6,7 +6,7 @@ require 'ccc/version'
 Gem::Specification.new do |spec|
   spec.name          = "ccc"
   spec.version       = Ccc::VERSION
-  spec.authors       = ["hyounsub.shin"]
+  spec.authors       = ["M.Kamioka"]
   spec.email         = ["begaborn@gmail.com"]
 
   spec.summary       = %q{Integration Crypto Currency Exchange.}
@@ -26,13 +26,9 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "pry-byebug"
   spec.add_development_dependency "rspec"
 
-  spec.add_runtime_dependency 'zaif', '0.0.2'
-#  spec.add_runtime_dependency 'bitflyer', '0.1.2'
-#  spec.add_runtime_dependency 'ruby_coincheck_client', '0.3.0'
-  spec.add_runtime_dependency 'bitfinex-rb', '0.1.0'
   spec.add_runtime_dependency 'ruby_bitbankcc', '0.1.3'
-  spec.add_runtime_dependency 'websocket-client-simple'
   spec.add_runtime_dependency 'activesupport'
   spec.add_runtime_dependency 'color_echo'
+  spec.add_runtime_dependency 'jwt'
 
 end

@@ -1,8 +1,5 @@
 module Market
 
-  class NotConfigured < StandardError; end
-  class ApiError < StandardError; end
-
   class Currency
     attr_accessor :pair
     attr_accessor :market_conf
