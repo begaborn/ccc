@@ -235,10 +235,22 @@ module Market
       0
     end
 
+    def buy(amount, price: nil, limit: true, retry_count: 3, interval: 30)
+      stickily_buy(amount, price: price, limit: limit, retry_count: retry_count, interval: interval)
+    end
+
+    def sell(amount, price: nil, limit: true, retry_count: 3, interval: 30)
+      stickily_sell(amount, price: price, limit: limit, retry_count: retry_count, interval: interval)
+    end
+
+    def cancel_order(tid, retry_count: 10)
+      stickily_cancel(tid, retry_count: retry_count)
+    end
+
     def stickily_buy(amount, price: nil, limit: true, retry_count: 3, interval: 30)
       res = false
       1.step do |index|
-        res = buy amount, price: price, limit: limit
+        res = create_order :buy, amount, price: price, limit: limit
         break if index >= retry_count || res
         sleep interval
       end
@@ -248,7 +260,7 @@ module Market
     def stickily_sell(amount, price: nil, limit: true, retry_count: 3, interval: 30)
       res = false
       1.step do |index|
-        res = sell amount, price: price, limit: limit
+        res = create_order :sell, amount, price: price, limit: limit
         break if index >= retry_count || res
         sleep interval
       end
@@ -258,7 +270,7 @@ module Market
     def stickily_cancel(tid, retry_count: 10)
       res = false
       1.step do |index|
-        res = cancel tid
+        res = delete_order tid
         break if index >= retry_count || res
         sleep 1
       end

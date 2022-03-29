@@ -1,5 +1,4 @@
 require 'jwt'
-require 'faraday'
 
 module Upbit
   class Client
@@ -12,7 +11,15 @@ module Upbit
       self.currency_pair = currency_pair
     end
 
-    def account
+    def ticker
+      params = {
+        markets: self.currency_pair,
+      }
+
+      get_without_sign('/v1/ticker', params)
+    end
+
+    def accounts
       get('/v1/accounts')
     end
 
@@ -52,14 +59,26 @@ module Upbit
     end
 
     def get_without_sign(path, params={})
+      uri = URI(File.join(ENDPOINT, path))
+      uri.query = params.to_query
+      res = Net::HTTP.get_response(uri)
+      begin
+        res.value
+      rescue => e
+        raise ApiError.new(res)
+      end
+
+      parse(res)
+
     end
 
     def get(path, params={})
       uri = URI(File.join(ENDPOINT, path))
       req = Net::HTTP::Get.new(uri.request_uri)
-      req.body = parmas.to_json if params.present?
+      req.body = params.to_json if params.present?
       req['Authorization'] = get_authorize_token(params)
       req['Accept'] = 'application/json'
+      req['Content-Type'] = 'application/json; charset=utf-8'
       http = Net::HTTP.new(uri.hostname, uri.port)
       http.use_ssl = true
 

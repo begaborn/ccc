@@ -1,6 +1,11 @@
 module Bitbank
   # Currency Object.
   class Currency < Market::Currency
+    SIDE = {
+      buy: 'buy',
+      sell: 'sell',
+    }.freeze
+
     class << self
       def client
         @client ||= Client.new(
@@ -70,40 +75,6 @@ module Bitbank
       asset['withdrawal_fee']
     end
 
-    def buy(amount, price: nil, limit: true)
-      type = limit ? 'limit' : 'market'
-      price = self.price if limit && price.nil?
-      res = client.create_order(
-        currency_pair,
-        amount.round_down(amount_digit),
-        price.to_f.round_down(price_digit),
-        'buy',
-        type
-      )
-      order_res(res)
-    end
-
-    def sell(amount, price: nil, limit: true)
-      type = limit ? 'limit' : 'market'
-      price = self.price if price.nil?
-      res = client.create_order(
-        currency_pair,
-        amount.round_down(amount_digit),
-        price.to_f.round_down(price_digit),
-        'sell',
-        type
-      )
-      order_res(res)
-    end
-
-    def cancel(tid)
-      res = client.cancel_order(
-        currency_pair,
-        tid.to_i
-      )
-      order_res(res)
-    end
-
     def my_orders
       ord = orders
       return false unless ord
@@ -120,7 +91,7 @@ module Bitbank
     end
 
     def find_order(id)
-      order = order(id)
+      order = get_order(id)
       return unless order
       order.tap do |o|
         o['id'] = o['order_id']
@@ -185,6 +156,27 @@ module Bitbank
 
     private
 
+    def create_order(side, amount, price: nil, limit: true)
+      type = limit ? 'limit' : 'market'
+      price = self.price if price.nil?
+      res = client.create_order(
+        currency_pair,
+        amount.round_down(amount_digit),
+        price.to_f.round_down(price_digit),
+        side.to_s,
+        type
+      )
+      order_res(res)
+    end
+
+    def delete_order(tid)
+      res = client.cancel_order(
+        currency_pair,
+        tid.to_i
+      )
+      order_res(res)
+    end
+
     def order_res(res)
       res_json = JSON.parse(res)
       return false if res_json['success'] != 1
@@ -195,7 +187,7 @@ module Bitbank
       @ticker ||= JSON.parse(client.read_ticker(currency_pair).body)['data'] || []
     end
 
-    def order(id)
+    def get_order(id)
       res = JSON.parse(client.read_order(currency_pair, id))
       raise Market::ApiError.new("API:order ErrorCode:#{res['data']['code']}") if res['success'] != 1 || res['data'].nil? || res['data'].empty?
       res['data']

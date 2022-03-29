@@ -20,31 +20,23 @@ module Bybit
     end
 
     def available_balance
-      asset['locked'].to_f
+      asset['free'].to_f
     end
 
     def locked_balance
       asset['locked'].to_f
     end
 
-
-    def buy(amount, price: nil, limit: true, retry: 3)
-      type = limit ? 'LIMIT' : 'MARKET'
-      price = self.price if limit && price.nil?
-      res = client.order('Buy', amount.round_down(amount_digit), type, price: price.to_f.round_down(price_digit))
-      res['result']['orderLinkId']
+    def balance_pair
+      asset_pair['total'].to_f
     end
 
-    def sell(amount, price: nil, limit: true, retry: 3)
-      type = limit ? 'limit' : 'market'
-      price = self.price if price.nil?
-      res = client.order('Sell', amount.round_down(amount_digit), type, price: price.to_f.round_down(price_digit))
-      res['result']['orderLinkId']
+    def available_balance_pair
+      asset_pair['free'].to_f
     end
 
-    def cancel(id)
-      res = client.delete_order(id)
-      res['result']['orderLinkId']
+    def locked_balance_pair
+      asset_pair['locked'].to_f
     end
 
     def my_orders
@@ -82,6 +74,19 @@ module Bybit
 
     private
 
+    def create_order(side, amount, price: nil, limit: true)
+      type = limit ? 'LIMIT' : 'MARKET'
+      side = convert_side(side)
+      price = self.price if price.nil?
+      res = client.create_order(side, amount.round_down(amount_digit), type, price: price.to_f.round_down(price_digit))
+      res['result']['orderLinkId']
+    end
+
+    def delete_order(id)
+      res = client.delete_order(id)
+      res['result']['orderLinkId']
+    end
+
     def client
       @client ||= Client.new(symbol)
     end
@@ -99,6 +104,15 @@ module Bybit
       end
     end
 
+    def asset_pair
+      @asset_pair ||= begin
+        res = client.account
+        res['result']['balances'].find do |r|
+          r['coin'] == pair.upcase
+        end || {}
+      end
+    end
+
     def convert_status(status)
       case status
       when 'FILLED'
@@ -110,6 +124,16 @@ module Bybit
       end
     end
 
+    def convert_side(side)
+      case side
+      when :buy
+        'Buy'
+      when :sell
+        'Sell'
+      else
+        raise
+      end
+    end
 
   end
 

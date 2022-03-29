@@ -11,10 +11,15 @@ module Upbit
     end
 
     def price
+      res = client.ticker
+      target_res = res.find do |r|
+        r['market'] == self.currency_pair
+      end
+      (target_res || {})['trade_price'].to_f
     end
 
     def balance
-      client.account
+      asset['balance'].to_f
     end
 
     def buy(amount, price: nil, limit: true, retry: 3)
@@ -52,7 +57,15 @@ module Upbit
       @client ||= Client.new(currency_pair)
     end
 
+    def asset
+      @target_asset ||= begin
+        res = client.accounts
+        res.find do |r|
+          r['currency'] == currency_code.upcase
+        end || {}
+      end
 
+    end
 
   end
 

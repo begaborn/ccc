@@ -11,7 +11,7 @@ module Bybit
 
     # Place Order
     # https://bybit-exchange.github.io/docs/spot/?console#t-placeactive
-    def order(side, qty, type, price: nil)
+    def create_order(side, qty, type, price: nil)
       params = {
         symbol: symbol,
         qty: qty,
