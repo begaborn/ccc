@@ -1,11 +1,6 @@
 $:.unshift(File.dirname(File.expand_path(__FILE__)) + '/../lib')
 require 'pry-byebug'
 require 'ccc'
-require 'my_bitbank'
-
-Ccc.configure do |config|
-  config.yml_filename = File.dirname(File.expand_path(__FILE__)) + '/ccc.yml'
-end
 
 Bitbank.currencies.each do |c|
   currency = Bitbank.send(c.to_sym)
@@ -34,7 +29,7 @@ Bitbank.currencies.each do |c|
   puts "best_bid = #{currency.best_bid}"
   puts "volume = #{currency.volume24h}"
   amount = currency.buyable_amount(limit_cash: 1000, price: currency.price * 0.7)
-  order_id = currency.stickily_buy amount, price: currency.price * 0.8
+  order_id = currency.buy amount, price: currency.price * 0.8
   puts "order_id = #{order_id}"
   currency.reload
   puts "my_orders = #{currency.my_orders}"
@@ -52,9 +47,8 @@ Bitbank.currencies.each do |c|
   puts "orderable_amount = #{currency.orderable_amount}"
   puts "sellable_amount = #{currency.sellable_amount}"
   puts "buyable_amount = #{currency.buyable_amount}"
+  sleep(2)
   currency.all_cancel
-  #res = currency.stickily_cancel order_id
-  #puts "canceled order_id = #{res}"
   currency.reload
   puts "my_orders = #{currency.my_orders}"
   puts ''
