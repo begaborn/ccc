@@ -22,22 +22,29 @@ module Upbit
       asset['balance'].to_f
     end
 
-    def buy(amount, price: nil, limit: true, retry: 3)
-      type = limit ? 'limit' : 'market'
-      price = self.price if price.nil?
-      res =client.order('bid', amount.round_down(amount_digit), price.to_f.round_down(price_digit), type)
-      res["uuid"]
+    def available_balance
+      asset['balance'].to_f - asset['locked'].to_f
     end
 
-    def sell(amount, price: nil, limit: true, retry: 3)
+    def locked_balance
+      asset['locked'].to_f
     end
 
-    def cancel(id)
-      client.delete_order(id)
+    def balance_pair
+      asset_pair['balance'].to_f
+    end
+
+    def available_balance_pair
+      asset_pair['balance'].to_f - asset_pair['locked'].to_f
+    end
+
+    def locked_balance_pair
+      asset_pair['locked'].to_f
     end
 
     def my_orders
-      client.get_orders
+      res = client.get_orders
+
     end
 
     def find_order(id)
@@ -53,6 +60,19 @@ module Upbit
 
     private
 
+    def create_order(side, amount, price: nil, limit: true, retry: 3)
+      type = limit ? 'limit' : 'market'
+      side = convert_side(side)
+      price = self.price if price.nil?
+      res =client.order(side, amount.round_down(amount_digit), price.to_f.round_down(price_digit), type)
+      res["uuid"]
+    end
+
+    def delete_order(id)
+      client.delete_order(id)
+    end
+
+
     def client
       @client ||= Client.new(currency_pair)
     end
@@ -66,6 +86,28 @@ module Upbit
       end
 
     end
+
+    def asset_pair
+      @target_asset ||= begin
+        res = client.accounts
+        res.find do |r|
+          r['currency'] == pair.upcase
+        end || {}
+      end
+
+    end
+
+    def convert_side(side)
+      case side
+      when :buy
+        'bid'
+      when :sell
+        'sell'
+      else
+        raise
+      end
+    end
+
 
   end
 

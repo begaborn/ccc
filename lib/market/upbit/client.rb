@@ -12,15 +12,12 @@ module Upbit
     end
 
     def ticker
-      params = {
-        markets: self.currency_pair,
-      }
-
-      get_without_sign('/v1/ticker', params)
+      @ticker ||=
+        get_without_sign('/v1/ticker', { markets: self.currency_pair })
     end
 
     def accounts
-      get('/v1/accounts')
+      @accounts ||= get('/v1/accounts')
     end
 
     def order(side, volume, price, ord_type)
@@ -42,10 +39,7 @@ module Upbit
     end
 
     def get_orders(state = 'wait')
-      params = {
-        state: 'wait'
-      }
-      get('/v1/orders')
+      @get_orders ||= get('/v1/orders', { state: 'wait' })
     end
 
     private

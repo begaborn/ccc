@@ -67,11 +67,6 @@ module Bybit
       }
     end
 
-    def amount_digit
-      5
-    end
-
-
     private
 
     def create_order(side, amount, price: nil, limit: true)

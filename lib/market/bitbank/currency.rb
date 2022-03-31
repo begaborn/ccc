@@ -154,6 +154,10 @@ module Bitbank
       4
     end
 
+    def min_amount
+      (0.1 ** amount_digit).round(amount_digit)
+    end
+
     private
 
     def create_order(side, amount, price: nil, limit: true)

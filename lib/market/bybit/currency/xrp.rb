@@ -1,11 +1,11 @@
 module Bybit
-  class Btc < Currency
+  class Xrp < Currency
     def price_digit
-      2
+      4
     end
 
     def amount_digit
-      6
+      2
     end
   end
 end

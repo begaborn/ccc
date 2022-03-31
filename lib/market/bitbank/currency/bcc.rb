@@ -3,5 +3,6 @@ module Bitbank
     def price_digit
       0
     end
+
   end
 end
