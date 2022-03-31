@@ -19,7 +19,7 @@ module Bybit
         type: type,
       }
 
-      params[:price] = price unless price.to_i.zero?
+      params[:price] = price unless price.to_f.zero?
       post('/spot/v1/order', params)
     end
 

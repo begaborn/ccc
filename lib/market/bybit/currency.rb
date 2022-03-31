@@ -1,6 +1,7 @@
 module Bybit
   # Currency Object.
   class Currency < Market::Currency
+    MIN_CASH = 10.freeze
 
     def currency_code
       super.downcase
@@ -65,6 +66,12 @@ module Bybit
         'filled_amount' => r['executedQty'],
         'status' => convert_status(r['status'])
       }
+    end
+
+
+    def min_amount(min_cash: MIN_CASH, price: nil)
+      price = price || self.price
+      (min_cash / price.to_f).round_down(amount_digit)
     end
 
     private

@@ -7,5 +7,6 @@ module Bybit
     def amount_digit
       2
     end
+
   end
 end
