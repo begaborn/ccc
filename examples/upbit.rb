@@ -2,7 +2,8 @@ $:.unshift(File.dirname(File.expand_path(__FILE__)) + '/../lib')
 require 'pry-byebug'
 require 'ccc'
 
-currency = Upbit.xrp
+currency = Upbit.btc
+
 puts '-----------------------------------'
 puts "currency_code = #{currency.currency_code}"
 puts "default_pair = #{currency.default_pair}"
@@ -14,15 +15,25 @@ puts "price = #{currency.price}"
 puts "balance = #{currency.balance}"
 puts "available_balance = #{currency.available_balance}"
 puts "locked_balance = #{currency.locked_balance}"
+puts "balance_pair = #{currency.balance_pair}"
+puts "locked_balance_pair = #{currency.locked_balance_pair}"
+puts "available_balance_pair = #{currency.available_balance_pair}"
 amount = currency.buyable_amount(limit_cash: 10000, price: currency.price * 0.7)
 puts "amount = #{amount}"
+order_id = currency.buy amount, price: currency.price * 0.8
+puts "order_id = #{order_id}"
+currency.reload
 
+puts "my_orders = #{currency.my_orders}"
+puts "find_order = #{currency.find_order(order_id)}"
+puts "balance = #{currency.balance}"
+puts "locked_balance = #{currency.locked_balance}"
+puts "available_balance = #{currency.available_balance}"
 
-#p btc.available_balance
-#p btc.locked_balance
-#
-#order_id = btc.buy(0.001, price: 10000)
-#p btc.my_orders
-#p btc.find_order(order_id)
-#binding.pry
-#btc.cancel(order_id)
+sleep 2
+currency.all_cancel
+currency.reload
+puts "my_orders = #{currency.my_orders}"
+puts ''
+
+sleep 1
