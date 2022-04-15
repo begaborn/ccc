@@ -74,18 +74,6 @@ module Market
       raise NotImplementedError.new("Not Supported: #{self.class}##{__method__}")
     end
 
-    def buy(amount, price: nil, limit: true)
-      raise NotImplementedError.new("Not Supported: #{self.class}##{__method__}")
-    end
-
-    def sell(amount, price: nil, limit: true)
-      raise NotImplementedError.new("Not Supported: #{self.class}##{__method__}")
-    end
-
-    def cancel(tid)
-      raise NotImplementedError.new("Not Supported: #{self.class}##{__method__}")
-    end
-
     def trades
       raise NotImplementedError.new("Not Supported: #{self.class}##{__method__}")
     end

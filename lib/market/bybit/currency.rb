@@ -48,9 +48,9 @@ module Bybit
         {
           'id'     => r['orderLinkId'],
           'date'   => r['updateTime'].to_i,
-          'amount' => r['origQty'],
-          'price'  => r['price'],
-          'side'   => r['side'],
+          'amount' => r['origQty'].to_f.round_down(amount_digit),
+          'price'  => r['price'].to_f.round_down(price_digit),
+          'side'   => convert_order_side(r['side']),
         }
       end
     end
@@ -75,6 +75,18 @@ module Bybit
     end
 
     private
+
+    ORDER_SIDE = {
+      BUY: 'buy',
+      SELL: 'sell',
+    }
+
+    def convert_order_side(side)
+      ORDER_SIDE[side.to_sym]
+
+    end
+
+
 
     def create_order(side, amount, price: nil, limit: true)
       type = limit ? 'LIMIT' : 'MARKET'

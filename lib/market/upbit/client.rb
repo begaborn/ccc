@@ -39,7 +39,11 @@ module Upbit
     end
 
     def get_orders(state = 'wait')
-      @get_orders ||= get('/v1/orders', { state: 'wait' })
+      @get_orders ||= get('/v1/orders', { market: self.currency_pair, state: state })
+    end
+
+    def get_order(uuid)
+      @get_order ||= get('/v1/order', { uuid: uuid })
     end
 
     private
@@ -68,11 +72,9 @@ module Upbit
 
     def get(path, params={})
       uri = URI(File.join(ENDPOINT, path))
+      uri.query = params.to_query if params.present?
       req = Net::HTTP::Get.new(uri.request_uri)
-      req.body = params.to_json if params.present?
       req['Authorization'] = get_authorize_token(params)
-      req['Accept'] = 'application/json'
-      req['Content-Type'] = 'application/json; charset=utf-8'
       http = Net::HTTP.new(uri.hostname, uri.port)
       http.use_ssl = true
 

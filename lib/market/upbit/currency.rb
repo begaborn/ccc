@@ -44,10 +44,33 @@ module Upbit
 
     def my_orders
       res = client.get_orders
-
+      res.map do |r|
+        {
+          'id'     => r['uuid'],
+          'date'   => Time.parse(r['created_at']).to_i,
+          'amount' => r['volume'].to_f.round_down(amount_digit),
+          'price'  => r['price'].to_f.round_down(price_digit),
+          'side'   => convert_order_side(r['side']),
+        }
+      end
     end
 
     def find_order(id)
+      r = client.get_order(id)
+      res = {}
+      res['id'] = r['uuid']
+      res['currency_pair'] = r['market']
+      res['date']   = Time.parse(r['created_at']).to_i,
+      res['amount'] = r['volume'].to_f.round_down(amount_digit),
+      res['price']  = r['price'].to_f.round_down(price_digit),
+      res['side']   = convert_order_side(r['side']),
+      res['filled_amount'] = r['executed_volume']
+      res['status'] = r['state'].downcase
+      res['status'] = 'filled' if r['state'] == 'done'
+      res['status'] = 'unfilled' if r['state'] == 'wait'
+      res['status'] = 'partially_filled' if r['state'] == 'watch'
+
+      res
     end
 
     def amount_digit
@@ -60,25 +83,34 @@ module Upbit
 
     private
 
+    ORDER_SIDE = {
+      bid: 'buy',
+      ask: 'sell',
+    }
+
+    def convert_order_side(side)
+      ORDER_SIDE[side.to_sym]
+    end
+
     def create_order(side, amount, price: nil, limit: true, retry: 3)
       type = limit ? 'limit' : 'market'
       side = convert_side(side)
       price = self.price if price.nil?
       res =client.order(side, amount.round_down(amount_digit), price.to_f.round_down(price_digit), type)
-      res["uuid"]
+      res['uuid']
     end
 
     def delete_order(id)
-      client.delete_order(id)
+      res = client.delete_order(id)
+      res['uuid']
     end
-
 
     def client
       @client ||= Client.new(currency_pair)
     end
 
     def asset
-      @target_asset ||= begin
+      @asset ||= begin
         res = client.accounts
         res.find do |r|
           r['currency'] == currency_code.upcase
@@ -88,7 +120,7 @@ module Upbit
     end
 
     def asset_pair
-      @target_asset ||= begin
+      @asset_pair ||= begin
         res = client.accounts
         res.find do |r|
           r['currency'] == pair.upcase

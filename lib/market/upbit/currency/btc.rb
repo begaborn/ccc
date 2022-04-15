@@ -1,7 +1,7 @@
 module Upbit
   class Btc < Currency
     def price_digit
-      0
+      -3
     end
   end
 end
