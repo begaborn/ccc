@@ -23,6 +23,8 @@ my_orders = btc.my_orders
 # Get a order for order_id
 order = btc.find_order(order_id)
 
+order_id = btc.cancel_order(order_id)
+
 # Check all methods
 kls = Bybit
 kls.currencies.each do |c|
@@ -49,7 +51,7 @@ kls.currencies.each do |c|
 
   sleep 2
 
-  currency.all_cancel
+  currency.cancel_order(order_id)
   currency.reload
   puts "my_orders = #{currency.my_orders}"
   puts ''

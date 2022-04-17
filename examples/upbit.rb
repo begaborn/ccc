@@ -31,7 +31,7 @@ puts "locked_balance = #{currency.locked_balance}"
 puts "available_balance = #{currency.available_balance}"
 
 sleep 2
-currency.all_cancel
+currency.cancel_order(order_id)
 currency.reload
 puts "my_orders = #{currency.my_orders}"
 puts ''

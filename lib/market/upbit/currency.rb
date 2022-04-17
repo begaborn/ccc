@@ -61,8 +61,8 @@ module Upbit
       res['id'] = r['uuid']
       res['currency_pair'] = r['market']
       res['date']   = Time.parse(r['created_at']).to_i,
-      res['amount'] = r['volume'].to_f.round_down(amount_digit),
-      res['price']  = r['price'].to_f.round_down(price_digit),
+      res['amount'] = r['volume'].to_f,
+      res['price']  = r['price'].to_f,
       res['side']   = convert_order_side(r['side']),
       res['filled_amount'] = r['executed_volume']
       res['status'] = r['state'].downcase

@@ -48,7 +48,7 @@ Bitbank.currencies.each do |c|
   puts "sellable_amount = #{currency.sellable_amount}"
   puts "buyable_amount = #{currency.buyable_amount}"
   sleep(2)
-  currency.all_cancel
+  currency.cancel_order(order_id)
   currency.reload
   puts "my_orders = #{currency.my_orders}"
   puts ''

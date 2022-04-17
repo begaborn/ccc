@@ -64,7 +64,9 @@ module Bybit
         'date' => r['updateTime'].to_i,
         'amount' => r['origQty'],
         'filled_amount' => r['executedQty'],
-        'status' => convert_status(r['status'])
+        'status' => convert_status(r['status']),
+        'price' => r['price'].to_f,
+        'side' => convert_order_side(r['side']),
       }
     end
 
