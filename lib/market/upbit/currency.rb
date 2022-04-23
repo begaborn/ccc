@@ -19,11 +19,11 @@ module Upbit
     end
 
     def balance
-      asset['balance'].to_f
+      asset['balance'].to_f + asset['locked'].to_f
     end
 
     def available_balance
-      asset['balance'].to_f - asset['locked'].to_f
+      asset['balance'].to_f
     end
 
     def locked_balance
@@ -31,11 +31,11 @@ module Upbit
     end
 
     def balance_pair
-      asset_pair['balance'].to_f
+      asset_pair['balance'].to_f + asset_pair['locked'].to_f
     end
 
     def available_balance_pair
-      asset_pair['balance'].to_f - asset_pair['locked'].to_f
+      asset_pair['balance'].to_f
     end
 
     def locked_balance_pair
