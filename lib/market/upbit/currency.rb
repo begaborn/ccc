@@ -134,7 +134,7 @@ module Upbit
       when :buy
         'bid'
       when :sell
-        'sell'
+        'ask'
       else
         raise
       end
