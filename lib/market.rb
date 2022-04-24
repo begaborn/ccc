@@ -309,28 +309,3 @@ module Market
     end
   end
 end
-
-class Float
-  def round_down(digit)
-    f = self.to_s.to_d.floor(digit).to_f
-    digit > 0 ? f : f.to_i
-  end
-
-  def flatten(digit)
-    round_down(digit - self.to_i.to_s.size)
-  end
-end
-
-class Fixnum
-  def round_down(digit)
-    self.to_s.to_d.floor(digit).to_i
-  end
-
-  def flatten(digit)
-    round_down(digit - self.to_s.size)
-  end
-
-  def prefix(digit)
-    self / (10 ** (self.to_s.size - digit))
-  end
-end

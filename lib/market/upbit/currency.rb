@@ -48,8 +48,8 @@ module Upbit
         {
           'id'     => r['uuid'],
           'date'   => Time.parse(r['created_at']).to_i,
-          'amount' => r['volume'].to_f.round_down(amount_digit),
-          'price'  => r['price'].to_f.round_down(price_digit),
+          'amount' => amount_trim(r['volume'].to_f),
+          'price'  => price_trim(r['price'].to_f),
           'side'   => convert_order_side(r['side']),
         }
       end
@@ -77,6 +77,30 @@ module Upbit
       5
     end
 
+    def price_trim(num)
+      price_unit =
+        if num < 1000
+          1
+        elsif num < 10000
+          5
+        elsif num < 100000
+          10
+        elsif num < 500000
+          50
+        elsif num < 1000000
+          100
+        else
+          1000
+        end
+
+      num.trim(price_unit)
+    end
+
+    def amount_trim(num)
+      num.round_down(amount_digit)
+    end
+
+
     def currency_pair
       "#{pair}-#{currency_code}".upcase
     end
@@ -96,7 +120,7 @@ module Upbit
       type = limit ? 'limit' : 'market'
       side = convert_side(side)
       price = self.price if price.nil?
-      res =client.order(side, amount.round_down(amount_digit), price.to_f.round_down(price_digit), type)
+      res =client.order(side, amount_trim(amount), price_trim(price.to_f), type)
       res['uuid']
     end
 

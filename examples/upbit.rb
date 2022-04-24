@@ -2,8 +2,10 @@ $:.unshift(File.dirname(File.expand_path(__FILE__)) + '/../lib')
 require 'pry-byebug'
 require 'ccc'
 
-currency = Upbit.btc
+xrp = Upbit.xrp
+xrp.amount_trim(3054.32000031)
 
+currency = Upbit.btc
 puts '-----------------------------------'
 puts "currency_code = #{currency.currency_code}"
 puts "default_pair = #{currency.default_pair}"
