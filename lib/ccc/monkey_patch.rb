@@ -17,7 +17,6 @@ class Float
       end
 
     factor = 10 ** after_point_digit
-    binding.pry
     (self * factor).to_i / (unit * factor).to_i * unit
   end
 end
